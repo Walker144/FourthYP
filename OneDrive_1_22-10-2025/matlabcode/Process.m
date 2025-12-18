@@ -1,0 +1,51 @@
+load('cyclingofloading1.mat')
+PPTcalibration = [1;1;1]; %units?
+
+
+%This calculates the volume of water in counts that have gone through in
+%total, so we need to work out 
+
+%calibration 07/11/25
+% Water mass was 1460.23 - 138.65 = 1321.58g
+% Number of counts from file flowcalibration.mat: 2247
+% Therefore each 'count' represents 1321.58/2247 = 0.588g or 0.588ml
+
+
+FLOWcounter = [0;cumsum(abs(diff(sign(FLOWdata-2.5)))>1)];
+tail(FLOWcounter)
+
+
+FLOWcalibration = 0.588; %units?
+%
+PPTs = zeros(size(PPTdata));
+
+%I am assuming this converts the PPTData from voltage (V) to pressure (KPa) 
+% for ii=1:3
+%     PPTs(:,ii)=PPTdata(:,ii)*PPTcalibration(ii);
+% end
+
+%Updated based on Calibration 22/10/25
+SF1 = 1000; %Convert input voltage to mV for equation
+SF2 = 1; 
+
+PPTs(:,1) = (PPTdata(:,1) * SF1 * 0.6572121772 -5.901765352)*SF2;
+PPTs(:,2) = (PPTdata(:,2) * SF1 * 0.6575476561 -6.187523444)*SF2;
+PPTs(:,3) = (PPTdata(:,3) * SF1 * 0.6557315234 -4.36061463)*SF2;
+
+
+
+
+Flow=FLOWcounter*FLOWcalibration;
+%% plot
+figure
+hold on
+for ii=1:3
+    plot(timestamps,PPTs(:,ii))
+end
+
+%-mean(PPTs(1:100,ii))
+
+figure
+plot(timestamps,Flow)
+xlabel("Time")
+ylabel("Total water volume (ml)")

@@ -1,0 +1,7 @@
+load('cyclingofloading1.mat')
+fi
+
+FLOWcounter = [0;cumsum(abs(diff(sign(FLOWdata-2.5)))>1)];
+T = table(timestamps,FLOWcounter,PPTdata(:,1),PPTdata(:,1),PPTdata(:,1));
+T(1:5,:)
+writetable(T,filename,'Sheet',1,'Range','D1')
