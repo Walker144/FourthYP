@@ -12,9 +12,14 @@ ii=1; % image number to prepare for TauFactor
 % Open image - Change image adjust properties as needed
 Image = OpenImage(images,ii);
 %  Crop image [left right bottom top] values from 0 to 1
+
 Image = CropImage(Image,[0.1 0.90 0.15 0.70]);
+figure; imshow(Image); title('Raw Image');
 % Binarize image - Change radius range for particles as needed
-ImageBW = BinIm(Image);
+%additioanl option to change sensitivity added so that more circles show,
+%was originally 0.5 but increasing to 0.7 seems to actually have helped. 
+ImageBW = BinIm(Image,0.7);
+figure; imshow(ImageBW, 'InitialMagnification', 'fit'); colormap(gray); colorbar; title('Raw Greyscale Image');
 % Identify particles
 [Centersu,Centersv,Areas,L,CN]=ParticleWatershed(ImageBW);
 %% Calculate coordination number
@@ -30,9 +35,9 @@ colormap(lines(max(CN))); clim([min(CN), max(CN)]); h=colorbar; h.Ticks=min(CN):
 
 figure; plot(Areas,'o'); %to help identify areas
 CNup=CN;
-CNup(Areas<6000)=[]; % get rid of oversegmented particles
-Average_Coordination = sum(CNup)/size(CNup,1);
-Mechanical_Coordination = (sum(CNup)-size(CNup(CNup==1),1))/(size(CNup,1)-size(CNup(CNup==0),1)-size(CNup(CNup==1),1));
+CNup(Areas<6000)=[];   % get rid of oversegmented particles
+Average_Coordination = sum(CNup)/size(CNup,1)
+Mechanical_Coordination = (sum(CNup)-size(CNup(CNup==1),1))/(size(CNup,1)-size(CNup(CNup==0),1)-size(CNup(CNup==1),1))
 %% Check segmentation
 figure 
 rgb = label2rgb(L,'lines',[.5 .5 .5]);
@@ -42,8 +47,9 @@ end
 imshow(rgb)
 
 %% Create 13 sections 6 + 1 + 6 for Taufactor
-Radius1 = [1 1 1 1 0.96 0.88 0.83]; % Reduction of Radius for section 1. TO BE DEFINED based on Solidworks drawing
-Radius2 = [1 1 1 1 0.96 0.88 0.83]; % Reduction of Radius for section 2. TO BE DEFINED based on Solidworks drawing
+Radius1 = [.86 .98 1 .98 .88 .73 .66 .61 .58 .56 .55]; % Reduction of Radius for section 1. TO BE DEFINED based on Solidworks drawing
+Radius2 = [.91 .99 1 .99 .92 .83 .78 .75 .73 .72 .72]; % Reduction of Radius for section 2. TO BE DEFINED based on Solidworks drawing
+Radius3 = [.92 .99 1 .99 .93 .86 .82 .79 .77 .76 .76]; % Reduction of Radius for section 2. TO BE DEFINED based on Solidworks drawing
 figure; plot(Areas,'o'); %to help identify areas
 
 Section = zeros(size(ImageBW,1),size(ImageBW,2),size(Radius1,2));
@@ -51,11 +57,13 @@ for kk=1:size(Radius1,2)
     Image = Section(:,:,kk);
     for jj=1:size(Centersu,1)
         %lowered lower area from 6000
-        if Areas(jj)>2000 && Areas(jj)<10000 % Use Radius1
+        if Areas(jj)>11000 && Areas(jj)<15000 % Use Radius1
             Image = drawCircle(Image, [Centersu(jj) Centersv(jj)], Radius1(kk)*sqrt(Areas(jj)/pi));
         %adjusted lower end of radius2
-        elseif Areas(jj)>10000 && Areas (jj)<28000 % Use Radius 2
+        elseif Areas(jj)>20000 && Areas (jj)<23000 % Use Radius 2
             Image = drawCircle(Image, [Centersu(jj) Centersv(jj)], Radius2(kk)*sqrt(Areas(jj)/pi));
+        elseif Areas(jj)>23000 && Areas (jj)< 35000% Use Radius 3
+            Image = drawCircle(Image, [Centersu(jj) Centersv(jj)], Radius3(kk)*sqrt(Areas(jj)/pi));  
         else
             Image(L==jj)=0; % if not one of the radii identified, IGNORE particle
         end
@@ -70,7 +78,7 @@ for kk=1:size(Section,3)
     imwrite(imresize(Section(:,:,kk),0.5,'nearest'),['I' num2str(kk) '.tif'],'tif')
 end
 %% calculate local void ratio based on particle cross section
-e = eCrop(Section);
+e = eCrop(Section)
 
 % %% plot displacement
 % j1=1;
@@ -104,9 +112,9 @@ Image = Image(floor((1-crop(4))*size(Image,1))+1:floor((1-crop(3))*size(Image,1)
     floor(crop(1)*size(Image,2))+1:floor(crop(2)*size(Image,2)));
 end
 
-function [bw3] = BinIm(Image)
+function [bw3] = BinIm(Image,sensitivity)
 % Use the imbinarize function to convert the grayscale image into a binary image.
-bw = imbinarize(Image,'adaptive','ForegroundPolarity','bright','Sensitivity',0.5);
+bw = imbinarize(Image,'adaptive','ForegroundPolarity','bright','Sensitivity',sensitivity);
 % figure;imshow(bw)
 % fill holes within circular particles
 [centres,radii] = imfindcircles(bw,[40 100],"ObjectPolarity","bright","Sensitivity",0.91); % change radii range here
