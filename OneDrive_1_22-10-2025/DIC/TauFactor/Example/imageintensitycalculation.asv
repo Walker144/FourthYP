@@ -1,0 +1,139 @@
+% Prepare images for taufactor + Coordination number calc + local e
+% O. Adamidis 2024
+
+clear
+
+% Find number of images, all placed in subfolder Images within current
+% directory, update image type, here .png
+images = dir([pwd '\*.jpg']);
+totalimages = size(images,1);
+
+ii=1; % image number to prepare for TauFactor
+% Open image - Change image adjust properties as needed
+Image = OpenImage(images,ii);
+%  Crop image [left right bottom top] values from 0 to 1
+
+Image = CropImage(Image,[0.21 0.6 0.11 0.5]);
+figure; imshow(Image); title('Raw Image');
+
+coordinates = [320 150; 100 230; 250 335];
+cval = Image(coordinates(:,2), coordinates(:,1), :)
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  F U N C T I O N S
+%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function [ImageBW] = OpenImage(images,ii)
+% Opens image, adjusts, and turns to greyscale
+Image = imread([images(ii).folder '\' images(ii).name]);
+% figure; imshow(Image);
+% Adjust image if needed
+Imageadj = imadjust(Image,[0.2 0.7],[0 1],[0.5 0.7 1]);
+% figure; imshow(Imageadj);
+% Turn to greyscale
+ImageBW = rgb2gray(Imageadj);
+% figure; imshow(ImageBW);
+end
+
+function [Image] = CropImage(Image,crop)
+Image = Image(floor((1-crop(4))*size(Image,1))+1:floor((1-crop(3))*size(Image,1)),...
+    floor(crop(1)*size(Image,2))+1:floor(crop(2)*size(Image,2)));
+end
+
+function [bw3] = BinIm(Image,sensitivity)
+% Use the imbinarize function to convert the grayscale image into a binary image.
+bw = imbinarize(Image,'adaptive','ForegroundPolarity','bright','Sensitivity',sensitivity);
+imwrite(bw,['IBW.tif'],'tif')
+%figure;imshow(bw)
+% fill holes within circular particles
+[centres,radii] = imfindcircles(bw,[30 50],"ObjectPolarity","bright","Sensitivity",0.95); % change radii range here
+
+
+
+%figure;imshow(bw);viscircles(centers,radii);
+for kk=1:size(centres,1)
+    bw = drawCircle(bw, centres(kk,:), radii(kk)*0.8);
+end
+[bcentres,bradii] = imfindcircles(bw,[14,20],"ObjectPolarity","dark","Sensitivity",0.95);
+bradii
+
+for kk=1:size(bcentres,1)
+    bw = drawCircle(bw, bcentres(kk,:), 40*0.8);
+end
+% Fill holes with area <20
+bw2 = ~bwareaopen(~bw, 20);
+% Remove background noise from the image with the bwareaopen function.
+bw3 = bwareaopen(bw2,1200); %removes all connected components (objects) that have fewer than P pixels from the binary image BW, producing another binary image, BW2.
+
+
+figure;imshow(bw3)
+end
+
+function [Centersu,Centersv,Areas,L,CN]=ParticleWatershed(ImageBW)
+% Separate particles
+% Calculate the distance transform of the complement of the binary image.
+% The value of each pixel in the output image is the distance between that
+% pixel and the nearest nonzero pixel of bw.
+D = bwdist(~ImageBW);
+% D(~ImageBW) = -Inf;
+D = -D;
+% imshow(D,[])
+% remove local minima (do surf(D) to check value) to avoid oversegmentation
+E = imhmin(D,1);
+% Watershed transform to separate particles, also when touching
+L = watershed(E,8);
+L(~ImageBW) = 0;
+%  Region props
+CC = regionprops(L,'Area','Centroid','Centroid','BoundingBox','PixelList');
+totalparticles=size(CC,1);
+Centersu = zeros(totalparticles,1);
+Centersv = zeros(totalparticles,1);
+Areas = zeros(totalparticles,1);
+CN = zeros(totalparticles,1);
+for jj=1:size(Centersu,1)
+    Centersu(jj) = CC(jj).Centroid(1);
+    Centersv(jj) = CC(jj).Centroid(2);
+    Areas(jj) = CC(jj).Area;
+    % coordination number calculation
+    ImageBinWatershed = double(L); 
+    ImageBinWatershed(ImageBinWatershed>0)=1;
+    mask = zeros(size(ImageBW)); 
+    mask(L==jj) = 1;
+    dilatedmask = imdilate(mask, strel('disk',4));
+    ImageTemp = ImageBinWatershed+dilatedmask-ones(size(ImageBW));
+    ImageTemp(ImageTemp==-1)=0;
+    ImageTemp = bwareaopen(ImageTemp,6); % delete up to 6 pixel areas
+    cn = bwconncomp(ImageTemp);
+    CN(jj) = cn.NumObjects-1;
+end
+end
+
+function Image = drawCircle(Image, center, radius)
+    % Create a meshgrid for the image dimensions
+    [x,y] = meshgrid(1:size(Image,2), 1:size(Image,1));
+
+    % Calculate the distance of each pixel from the center
+    dist = sqrt((x - center(1)).^2 + (y - center(2)).^2);
+
+    % Create a circular mask
+    circleMask = dist <= radius;
+
+    % Set pixels within the circle to 1
+    Image(circleMask) = 1;
+end
+
+function e = eCrop(Section)
+figure; imshow(Section(:,:,1));
+roi = drawrectangle;
+vvoids = zeros(size(Section,3),1);
+vsolid = zeros(size(Section,3),1);
+for kk=1:size(Section,3)
+    Image = Section(:,:,kk);
+    ImageCrop = Image(floor(roi.Position(2))+1:floor(roi.Position(2)+roi.Position(4)),floor(roi.Position(1))+1:floor(roi.Position(1)+roi.Position(3)));
+    vvoids(kk) = nnz(~ImageCrop);
+    vsolid(kk) = nnz(ImageCrop);
+end
+weights = [0.5;ones(size(Section,3)-2,1);0.5];
+e = sum(weights.*vvoids)/sum(weights.*vsolid);
+disp(e);
+end
