@@ -1,0 +1,2 @@
+Valvecomparison: opening the old valve and then the new one separately to compare which one gives the maximum flow
+Valvecomparison2: Opening the old valve, closing. Opening the ball valve partially (probably about 10 degrees), and then opening the old needle valve fully such that there is significant liquefaction of the particles. 

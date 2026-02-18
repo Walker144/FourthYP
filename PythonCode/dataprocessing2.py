@@ -1,10 +1,16 @@
+#This version of the data processing program (forked on 18/02/26) doesn't use the smoothed average, only using a butterworth filter to remove noise
+
 
 import pandas
 import numpy as np
 import plottingfunctions
 import matplotlib.pyplot as plt
-data = pandas.read_excel('OneDrive_1_22-10-2025\Matlabcode\HTdata\Feb17\Test2dataexport.xlsx')
+#data = pandas.read_excel('OneDrive_1_22-10-2025\Matlabcode\HTdata\Feb17\Test2dataexport.xlsx')
+
+
+data = pandas.read_excel('OneDrive_1_22-10-2025\Matlabcode\HTdatacollection\Feb18\Valvecomparison2dataexport.xlsx')
 #data = pandas.read_excel('OneDrive_1_22-10-2025\FlowCalibrationData\watercalibration2dataexport.xlsx')
+
 
 times = data['timestamps']
 
@@ -54,13 +60,8 @@ PPT3 = plottingfunctions.butterfilter(PPT3,fs,cutoff)
 #idk where this data was collected from but probably shouldn't delete it lol
 #smoothregions  = [[0,25],[28,57],[59,73],[75,88],[91,99],[101,127],[127,146],[148,168],[170,196],[200,214],[216,242],[243,251],[253,256],[257,264],[265,271],[272,281],[282,290]]
 
-smoothregions = [[0.8,12.4],[16,38],[40,71],[73,97],[108,138],[143,172],[176,206],[214,243],[247,277],[290,326],[330,363],[365,395],[398,428],[437,472],[477,508],[511,542],[576,606],[609,643],[764,778],[793,812],[835,861],[866,895],[898,940],[946,971],[981,1010],[1013,1040],[1046,1076],[1080,1103],[1120,1152],[1159,1186],[1190,1219],[1221,1261],[1263,1300],[1303,1331],[1334,1365],[1367,1395],[1398,1451]]
 
 
-PPT1smoothed = plottingfunctions.replacewithconstants(PPT1,times,smoothregions)
-
-PPT2smoothed = plottingfunctions.replacewithconstants(PPT2,times,smoothregions)
-PPT3smoothed = plottingfunctions.replacewithconstants(PPT3,times,smoothregions)
 
 
 
@@ -73,7 +74,7 @@ flowrate = np.gradient(flowvolume) * fs
 
 flowrate = plottingfunctions.butterfilter(flowrate,fs,cutoff)
 flowrateraw = np.array(flowrate)
-flowrate = plottingfunctions.replacewithconstants(flowrateraw,times,smoothregions)
+
 
 
 
@@ -91,10 +92,6 @@ PPT2adjusted = (PPT2 - PPT2base) * 1000
 PPT3adjusted = (PPT3 - PPT2base) * 1000
 
 
-PPT1sadjusted = (PPT1smoothed - PPT1base) * 1000
-PPT2sadjusted = (PPT2smoothed - PPT2base) * 1000
-PPT3sadjusted = (PPT3smoothed - PPT3base) * 1000
-
 
 
 #plotting of PPT1 , PPT2 (and in the future PPT3), and flow rate 
@@ -106,9 +103,9 @@ ax1.plot(times, PPT2, label='PPT2')'''
 
 
 
-ax1.plot(times,PPT1sadjusted, label = 'PPT1 offset')
-ax1.plot(times,PPT2sadjusted, label = 'PPT2 offset')
-ax1.plot(times,PPT3sadjusted, label = 'PPT3 offset')
+ax1.plot(times,PPT1adjusted, label = 'PPT1 offset')
+ax1.plot(times,PPT2adjusted, label = 'PPT2 offset')
+ax1.plot(times,PPT3adjusted, label = 'PPT3 offset')
 
 ax1.set_xlabel('Time')
 ax1.set_ylabel('Pressure (Pa)')
@@ -126,7 +123,7 @@ ax2.set_xlabel('Time')
 ax2.set_ylabel('Flow Rate (m^3 / s)')
 ax2.grid(True)
 
-
+'''
 
 #calculating hydraulic gradient is deltah = deltap / rho g
 rhog = 1000 * 9.806
@@ -169,7 +166,7 @@ ax3.plot(timestoplot,permstoplot, label = 'smoothed',color = 'deepskyblue',lines
 ax3.set_xlabel('Time (s)')
 ax3.set_ylabel('Permiability')
 ax3.grid(True)
-ax3.legend()
+ax3.legend()'''
 
 
 plt.tight_layout()

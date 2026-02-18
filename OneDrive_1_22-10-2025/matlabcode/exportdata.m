@@ -1,4 +1,4 @@
-filetoimport = 'test2.mat';
+filetoimport = 'valvecomparison2.mat';
 
 load(filetoimport)
 
