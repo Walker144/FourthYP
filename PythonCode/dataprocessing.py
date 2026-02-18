@@ -3,7 +3,7 @@ import pandas
 import numpy as np
 import plottingfunctions
 import matplotlib.pyplot as plt
-data = pandas.read_excel('OneDrive_1_22-10-2025\matlabcode\HTdata\Feb17\Test2dataexport.xlsx')
+data = pandas.read_excel('OneDrive_1_22-10-2025\Matlabcode\HTdata\Feb17\Test2dataexport.xlsx')
 #data = pandas.read_excel('OneDrive_1_22-10-2025\FlowCalibrationData\watercalibration2dataexport.xlsx')
 
 times = data['timestamps']
@@ -120,7 +120,7 @@ ax1.grid(True)
 
 ax2.plot(times, flowrate)
 
-ax2.plot(times, flowrateraw,label = 'raw')
+#ax2.plot(times, flowrateraw,label = 'raw')
 
 ax2.set_xlabel('Time')
 ax2.set_ylabel('Flow Rate (m^3 / s)')

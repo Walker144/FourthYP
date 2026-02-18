@@ -15,43 +15,20 @@ Image = OpenImage(images,ii);
 
 %Image = CropImage(Image,[0.44 0.54 0.2 0.6]);
 
-Image = CropImage(Image,[0.54 0.58 0.2 0.7]);
+Image = CropImage(Image,[0.25 0.56 0.2 0.7]);
 
 figure; imshow(Image); title('Raw Image');
 figure;imhist(Image)
 title('Pixel intensity Histogram')
-Image(Image > 71) = 255;
-Image(Image < 25) = 255;
-Image(Image < 71) = 0;
-
+Image(Image > 75) = 255;
+Image(Image < 75) = 0;
+Image(Image == 0) = 128;
+Image(Image ==255) = 0;
+Image(Image ==128) = 255;
 figure;imshow(Image); title('black highlighted')
 ImageBW = BinIm(Image,0.7);
 figure; imshow(ImageBW, 'InitialMagnification', 'fit'); colormap(gray); colorbar; title('Raw Greyscale Image');
-% Identify particles
-[Centersu,Centersv,Areas,L,CN]=ParticleWatershed(ImageBW);
-%% Calculate coordination number
-% CN figure
-ImageCN=zeros(size(ImageBW));
-for kk=1:size(Centersu,1)
-    ImageCN(L==kk)=CN(kk);
-end
-%figure; surface(ImageCN,'EdgeColor','none'); axis equal; view(0,-90); h=colorbar; h.Ticks=[[min(CN):max(CN)]];
-rgbCN = label2rgb(ImageCN,'lines','k');
-figure; imshow(rgbCN); 
-colormap(lines(max(CN))); clim([min(CN), max(CN)]); h=colorbar; h.Ticks=min(CN):max(CN);
 
-figure; plot(Areas,'o'); %to help identify areas
-CNup=CN;
-CNup(Areas<6000)=[];   % get rid of oversegmented particles
-Average_Coordination = sum(CNup)/size(CNup,1)
-Mechanical_Coordination = (sum(CNup)-size(CNup(CNup==1),1))/(size(CNup,1)-size(CNup(CNup==0),1)-size(CNup(CNup==1),1))
-%% Check segmentation
-figure 
-rgb = label2rgb(L,'lines',[.5 .5 .5]);
-for kk=1:size(Centersu,1)
-    rgb = insertText(rgb,[Centersu(kk), Centersv(kk)],num2str(kk));
-end
-imshow(rgb)
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
