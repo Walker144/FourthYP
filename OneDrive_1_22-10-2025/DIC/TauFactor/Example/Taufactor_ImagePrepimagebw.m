@@ -47,9 +47,14 @@ end
 imshow(rgb)
 
 %% Create 13 sections 6 + 1 + 6 for Taufactor
+
+%%old Aggie Particle geomemtry 
 Radius1 = [.86 .98 1 .98 .88 .73 .66 .61 .58 .56 .55]; % Reduction of Radius for section 1. TO BE DEFINED based on Solidworks drawing
 Radius2 = [.91 .99 1 .99 .92 .83 .78 .75 .73 .72 .72]; % Reduction of Radius for section 2. TO BE DEFINED based on Solidworks drawing
 Radius3 = [.92 .99 1 .99 .93 .86 .82 .79 .77 .76 .76]; % Reduction of Radius for section 2. TO BE DEFINED based on Solidworks drawing
+
+Radius1 = [.87,.97,1,1,.97,.90,.82,.76,.73,.70,.68,.67,.67];
+
 figure; plot(Areas,'o'); %to help identify areas
 
 Section = zeros(size(ImageBW,1),size(ImageBW,2),size(Radius1,2));

@@ -1,0 +1,8 @@
+Flow Calibration3: Calibration of flow, delta m  = 3325 - 195 
+Flow Calibration4: Calibration of flow, delta m  = 4255 - 195 
+Flow Calibration5: Calibration of flow, delta m  = 3490 - 195 :    c = 3.9152
+Flow Calibration6: Calibration of flow, delta m  = 3805 - 195 :    c = 3.8705
+Flow Calibration7: Calibration of flow, delta m  = 4715 - 195 :    c = 3.85863
+
+
+3 are consistent, so use c = 3.87 * 10^-7. anything more accurate is probably bs anyway

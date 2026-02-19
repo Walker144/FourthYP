@@ -28,7 +28,7 @@ times = np.array(matdata['timestamps'][0])
 FLOWdata = np.array(matdata['FLOWdata'])
 
 FLOWcounter = np.concatenate([[0], np.cumsum(np.abs(np.diff(np.sign(FLOWdata - 2.5))) > 1)])
-flowvolume = FLOWcounter * 4.260 * 10**(-7)
+flowvolume = FLOWcounter * 3.87 * 10**(-7)
 
 
 #Using data collected to convert PPT voltages to Pressure (KPa), and to convert the flow count into a flowrate
