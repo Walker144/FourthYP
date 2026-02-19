@@ -3,23 +3,32 @@ import pandas
 import numpy as np
 import plottingfunctions
 import matplotlib.pyplot as plt
+import h5py
+
+#This also imports the .mat file directly rather than using the .xlsx so that there isn't the limitation for data processing
+#if processing a full experiment, purging half the rows is probably worthwile so that it can process quickly **** after calculating flowcount ****
 #data = pandas.read_excel('OneDrive_1_22-10-2025\Matlabcode\HTdata\Feb17\Test2dataexport.xlsx')
+matdata = h5py.File('OneDrive_1_22-10-2025\matlabcode\HTdata\Feb13\Test1.mat','r+')
 
-
-data = pandas.read_excel('OneDrive_1_22-10-2025\Matlabcode\HTdata\Feb13\Test1dataexport.xlsx')
+#data = pandas.read_excel('OneDrive_1_22-10-2025\Matlabcode\HTdata\Feb17\Test2dataexport.xlsx')
 #data = pandas.read_excel('OneDrive_1_22-10-2025\FlowCalibrationData\watercalibration2dataexport.xlsx')
 
 
-times = data['timestamps']
+#times = data['timestamps']
 
 
-flowvolume = data['FLOWcounterCalibrated'] * 4.260 * 10**(-7)
+#flowvolume = data['FLOWcounterCalibrated'] * 4.260 * 10**(-7)
 
 #PPT 1 and 2 are wired the wrong way around as of 17/02/26. When we re calibrate it might be worth changing that..
-PPT1 = data['PPT2']
-PPT2 = data['PPT1']
-PPT3 = data['PPT3']
+PPT1  = np.array(matdata['PPTdata'][1])
+PPT2 = np.array(matdata['PPTdata'][0])
+PPT3 = np.array(matdata['PPTdata'][2])
 
+times = np.array(matdata['timestamps'][0])
+FLOWdata = np.array(matdata['FLOWdata'])
+
+FLOWcounter = np.concatenate([[0], np.cumsum(np.abs(np.diff(np.sign(FLOWdata - 2.5))) > 1)])
+flowvolume = FLOWcounter * 4.260 * 10**(-7)
 
 
 #Using data collected to convert PPT voltages to Pressure (KPa), and to convert the flow count into a flowrate
@@ -140,7 +149,7 @@ ax2.grid(True)
 rhog = 1000 * 9.806
 
 #hgradient = (PPT3adjusted - PPT1adjusted) / rhog
-hgraidentsmoothed = (PPT1sadjusted - PPT3sadjusted) / (rhog * 0.2)  
+hgraidentsmoothed = (PPT1sadjusted - PPT3sadjusted) / (rhog * 0.2)  #0.2 as 200mm between PPT1 and PPT3
 
 
 
@@ -156,7 +165,7 @@ ax4.grid(True)
 
 
 #permiability = flowrate / hgradient * 100 #multiplied by 100 due to geometry, this needs checking next term so don't use for report results
-permiabilitysmoothed = flowrate / hgraidentsmoothed * 100
+permiabilitysmoothed = flowrate / hgraidentsmoothed * 1000
 
 #permiability = np.array(smooth_data(permiability,1000))
 permiabilitysmoothed = np.array(smooth_data(permiabilitysmoothed,1000))

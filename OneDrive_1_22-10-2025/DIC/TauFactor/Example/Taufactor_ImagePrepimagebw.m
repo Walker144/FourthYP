@@ -57,7 +57,7 @@ for kk=1:size(Radius1,2)
     Image = Section(:,:,kk);
     for jj=1:size(Centersu,1)
         %lowered lower area from 6000
-        if Areas(jj)>11000 && Areas(jj)<15000 % Use Radius1
+        if Areas(jj)>4000 && Areas(jj)<7000 % Use Radius1
             Image = drawCircle(Image, [Centersu(jj) Centersv(jj)], Radius1(kk)*sqrt(Areas(jj)/pi));
         %adjusted lower end of radius2
         elseif Areas(jj)>20000 && Areas (jj)<23000 % Use Radius 2
@@ -78,7 +78,7 @@ for kk=1:size(Section,3)
     imwrite(imresize(Section(:,:,kk),0.5,'nearest'),['I' num2str(kk) '.tif'],'tif')
 end
 %% calculate local void ratio based on particle cross section
-e = eCrop(Section)
+%e = eCrop(Section)
 
 % %% plot displacement
 % j1=1;
@@ -97,14 +97,8 @@ e = eCrop(Section)
 
 function [ImageBW] = OpenImage(images,ii)
 % Opens image, adjusts, and turns to greyscale
-Image = imread([images(ii).folder '\' images(ii).name]);
-% figure; imshow(Image);
-% Adjust image if needed
-Imageadj = imadjust(Image,[0.2 0.7],[0 1],[0.5 0.7 1]);
-% figure; imshow(Imageadj);
-% Turn to greyscale
-ImageBW = rgb2gray(Imageadj);
-% figure; imshow(ImageBW);
+ImageBW= imread([images(ii).folder '\' images(ii).name]);
+
 end
 
 function [Image] = CropImage(Image,crop)
@@ -117,7 +111,7 @@ function [bw3] = BinIm(Image,sensitivity)
 bw = imbinarize(Image,'adaptive','ForegroundPolarity','bright','Sensitivity',sensitivity);
 % figure;imshow(bw)
 % fill holes within circular particles
-[centres,radii] = imfindcircles(bw,[40 100],"ObjectPolarity","bright","Sensitivity",0.91); % change radii range here
+[centres,radii] = imfindcircles(bw,[30 50],"ObjectPolarity","bright","Sensitivity",0.91); % change radii range here
 % figure;imshow(bw);viscircles(centers,radii);
 for kk=1:size(centres,1)
     bw = drawCircle(bw, centres(kk,:), radii(kk)*0.8);

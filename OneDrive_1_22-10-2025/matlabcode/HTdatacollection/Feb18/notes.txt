@@ -1,2 +1,5 @@
 Valvecomparison: opening the old valve and then the new one separately to compare which one gives the maximum flow
 Valvecomparison2: Opening the old valve, closing. Opening the ball valve partially (probably about 10 degrees), and then opening the old needle valve fully such that there is significant liquefaction of the particles. 
+Flow Calibration1: Calibration of flow, delta m  = 2102.02 - 197.06 = 1904.96 g
+Flow Calibration1: Calibration of flow, delta m  = 2318.87 - 197.06 = 2121.81 g 
+

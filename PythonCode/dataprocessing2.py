@@ -1,77 +1,49 @@
-#This version of the data processing program (forked on 18/02/26) doesn't use the smoothed average, only using a butterworth filter to remove noise
+#This version of the data processing program (forked on 18/02/26) doesn't use the smoothed average, 
+# only using a butterworth filter to remove noise
+#This also imports the .mat file directly rather than using the .xlsx so that there isn't the limitation for data processing
+#if processing a full experiment, purging half the rows is probably worthwile so that it can process quickly **** after calculating flowcount ****
 
 
 import pandas
 import numpy as np
 import plottingfunctions
 import matplotlib.pyplot as plt
-#data = pandas.read_excel('OneDrive_1_22-10-2025\Matlabcode\HTdata\Feb17\Test2dataexport.xlsx')
+import h5py
 
 
-data = pandas.read_excel('OneDrive_1_22-10-2025\Matlabcode\HTdatacollection\Feb18\Valvecomparison2dataexport.xlsx')
-#data = pandas.read_excel('OneDrive_1_22-10-2025\FlowCalibrationData\watercalibration2dataexport.xlsx')
+#data = pandas.read_excel('OneDrive_1_22-10-2025\Matlabcode\HTdatacollection\Feb18\Test2dataexport.xlsx')
+
+matdata = h5py.File('OneDrive_1_22-10-2025\matlabcode\HTdata\Feb17\Test2.mat','r+')
+
+PPT1  = np.array(matdata['PPTdata'][1])
+PPT2 = np.array(matdata['PPTdata'][0])
+PPT3 = np.array(matdata['PPTdata'][2])
+
+times = np.array(matdata['timestamps'][0])
+FLOWdata = np.array(matdata['FLOWdata'])
+
+FLOWcounter = np.concatenate([[0], np.cumsum(np.abs(np.diff(np.sign(FLOWdata - 2.5))) > 1)])
 
 
-times = data['timestamps']
+#converting voltages and counts into volumes and pressures
 
-
-flowvolume = data['FLOWcounterCalibrated'] * 4.260 * 10**(-7)
-
-#PPT 1 and 2 are wired the wrong way around as of 17/02/26. When we re calibrate it might be worth changing that..
-PPT1 = data['PPT2']
-PPT2 = data['PPT1']
-PPT3 = data['PPT3']
-
-
-
-#Using data collected to convert PPT voltages to Pressure (KPa), and to convert the flow count into a flowrate
-
-
-
-
-
-
+flowvolume = FLOWcounter * 4.260 * 10**(-7)
 PPT1 = PPT1 * 608.5052 - 4.2710
 PPT2 = PPT2 *613.0834 - 4.99827
 PPT3 = PPT3 * 611.7754 - 3.2881
 
-
-
-
-
-
-
-
-
-def smooth_data(data, window_size):
-    return pandas.Series(data).rolling(window=window_size, min_periods=1).mean().tolist()
-
-
-
-
+#constants defined for butterworth function 
 fs = int(1 / (times[100] - times[99]))
 cutoff = 2  # cutoff frequency in Hz
 
 PPT1 = plottingfunctions.butterfilter(PPT1,fs,cutoff)
 PPT2 = plottingfunctions.butterfilter(PPT2,fs,cutoff)
 PPT3 = plottingfunctions.butterfilter(PPT3,fs,cutoff)
-#using constant over region to give a better smoothed signal, will plot both together with chainlinked for 'more smoothed' data
-
-#idk where this data was collected from but probably shouldn't delete it lol
-#smoothregions  = [[0,25],[28,57],[59,73],[75,88],[91,99],[101,127],[127,146],[148,168],[170,196],[200,214],[216,242],[243,251],[253,256],[257,264],[265,271],[272,281],[282,290]]
-
-
-
-
-
-
 
 
 
 #calculate flowrate based off flowvolume, must be multiplied to get from gradient / frame to gradient/ s 
 flowrate = np.gradient(flowvolume) * fs
-
-
 flowrate = plottingfunctions.butterfilter(flowrate,fs,cutoff)
 flowrateraw = np.array(flowrate)
 
@@ -94,15 +66,12 @@ PPT3adjusted = (PPT3 - PPT2base) * 1000
 
 
 
-#plotting of PPT1 , PPT2 (and in the future PPT3), and flow rate 
+
 
 fig, (ax1, ax2,ax3,ax4) = plt.subplots(4, 1, figsize=(10, 8))
 
-'''ax1.plot(times, PPT1, label='PPT1')
-ax1.plot(times, PPT2, label='PPT2')'''
 
-
-
+#plotting of PPT1, PPT2, PPT3
 ax1.plot(times,PPT1adjusted, label = 'PPT1 offset')
 ax1.plot(times,PPT2adjusted, label = 'PPT2 offset')
 ax1.plot(times,PPT3adjusted, label = 'PPT3 offset')
@@ -114,59 +83,11 @@ ax1.grid(True)
 
 
 
-
+#Plotting flowrate
 ax2.plot(times, flowrate)
-
-#ax2.plot(times, flowrateraw,label = 'raw')
-
 ax2.set_xlabel('Time')
 ax2.set_ylabel('Flow Rate (m^3 / s)')
 ax2.grid(True)
-
-'''
-
-#calculating hydraulic gradient is deltah = deltap / rho g
-rhog = 1000 * 9.806
-
-#hgradient = (PPT3adjusted - PPT1adjusted) / rhog
-hgraidentsmoothed = (PPT1sadjusted - PPT3sadjusted) / (rhog * 0.2)  
-
-
-
-#ax4.plot(times[20000::], smooth_data(hgradient,1000)[20000::], label = 'unsmoothed')
-ax4.plot(times, smooth_data(hgraidentsmoothed,1000),label = 'Hydrualic Gradient between PPT1 and PPT3' , color = 'blue')
-icrit = 1.1113
-ax4.plot([0,times[len(times)-1]],[icrit,icrit],color = 'red',linestyle = '--')
-
-ax4.set_xlabel('Time (s)')
-ax4.set_ylabel('Hydraulic Gradient')
-ax4.legend()
-ax4.grid(True)
-
-
-#permiability = flowrate / hgradient * 100 #multiplied by 100 due to geometry, this needs checking next term so don't use for report results
-permiabilitysmoothed = flowrate / hgraidentsmoothed * 100
-
-#permiability = np.array(smooth_data(permiability,1000))
-permiabilitysmoothed = np.array(smooth_data(permiabilitysmoothed,1000))
-#ax3.plot(times[20000::],permiability[20000::], label = 'unsmoothed')
-
-
-#plot only the smoothed regions for permiability so it's easier to see
-timestoplot = []
-permstoplot = []
-for s in smoothregions:
-    startindex = min(range(len(times)), key=lambda i: abs(times[i] - s[0]))
-    endindex = min(range(len(times)), key=lambda i: abs(times[i] - s[1]))
-    permstoplot = np.concatenate([permstoplot, permiabilitysmoothed[startindex:endindex]])
-    timestoplot  = np.concatenate([timestoplot ,  times[startindex:endindex]])
-
-
-ax3.plot(timestoplot,permstoplot, label = 'smoothed',color = 'deepskyblue',linestyle = '--')
-ax3.set_xlabel('Time (s)')
-ax3.set_ylabel('Permiability')
-ax3.grid(True)
-ax3.legend()'''
 
 
 plt.tight_layout()
