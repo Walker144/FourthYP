@@ -1,0 +1,2 @@
+Test1: Loading with the needle valve
+Test2: loading with ball, then needle then ball, observed liquefaction in the middle although this is not good so will likely not be good for results
