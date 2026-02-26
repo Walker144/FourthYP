@@ -24,13 +24,14 @@ imwrite(ImageBW, 'ImageBW.tif');
 
 % Identify particles
 [Centersu,Centersv,Areas,L,CN]=ParticleWatershed(ImageBW);
-CN
+size(CN)
 %% Calculate coordination number
 % CN figure
 ImageCN=zeros(size(ImageBW));
 for kk=1:size(Centersu,1)
     ImageCN(L==kk)=CN(kk);
 end
+
 %figure; surface(ImageCN,'EdgeColor','none'); axis equal; view(0,-90); h=colorbar; h.Ticks=[[min(CN):max(CN)]];
 rgbCN = label2rgb(ImageCN,'lines','k');
 figure; imshow(rgbCN); 
@@ -47,35 +48,18 @@ rgb = label2rgb(L,'lines',[.5 .5 .5]);
 for kk=1:size(Centersu,1)
     rgb = insertText(rgb,[Centersu(kk), Centersv(kk)],num2str(kk));
 end
-imshow(rgb)
+
 
 %% Create 13 sections 6 + 1 + 6 for Taufactor
 Radius1 = [.87,.97,1,1,.97,.90,.82,.76,.73,.70,.68,.67,.67];
 
 
-figure; plot(Areas,'o'); %to help identify areas
+imsize = [size(ImageBW,1),size(ImageBW,2)];
 
-Section = zeros(size(ImageBW,1),size(ImageBW,2),size(Radius1,2));
-for kk=1:size(Radius1,2)
-    Image = Section(:,:,kk);
-    for jj=1:size(Centersu,1)
-        %lowered lower area from 6000
-        if Areas(jj)>4000 && Areas(jj)<7000 % Use Radius1
-            Image = drawCircle(Image, [Centersu(jj) Centersv(jj)], Radius1(kk)*sqrt(Areas(jj)/pi));
-        else
-            Image(L==jj)=0; % if not one of the radii identified, IGNORE particle
-        end
-    end
-    % imshow(Image)
-    Section(:,:,kk) = Image;
-end
-imshow(Image)
+save("Tauimagevec.mat","imsize","Centersv","Centersu","Areas","CN","L",'-v7.3')
+imsize
 
-%% save images for tau factor Scale down to make it faster if needed
-% figure; imshow(imresize(Section(:,:,1),0.5,'nearest')); % check resizing
-for kk=1:size(Section,3)
-    imwrite(imresize(Section(:,:,kk),0.5,'nearest'),['I' num2str(kk) '.tif'],'tif')
-end
+
 %% calculate local void ratio based on particle cross section
 %e = eCrop(Section)
 
@@ -110,11 +94,12 @@ function [bw3] = BinIm(Image,sensitivity)
 bw = imbinarize(Image,'adaptive','ForegroundPolarity','bright','Sensitivity',sensitivity);
 % figure;imshow(bw)
 % fill holes within circular particles
-[centres,radii] = imfindcircles(bw,[10 100],"ObjectPolarity","bright","Sensitivity",0.91); % change radii range here
+[centres,radii] = imfindcircles(bw,[10 100],"ObjectPolarity","bright","Sensitivity",0.95); % change radii range here
 % figure;imshow(bw);viscircles(centers,radii);
-for kk=1:size(centres,1)
-    bw = drawCircle(bw, centres(kk,:), radii(kk)*0.8);
-end
+%for kk=1:size(centres,1)
+%    bw = drawCircle(bw, centres(kk,:), radii(kk)*0.8);
+%end
+
 % Fill holes with area <20
 bw2 = ~bwareaopen(~bw, 20);
 % Remove background noise from the image with the bwareaopen function.

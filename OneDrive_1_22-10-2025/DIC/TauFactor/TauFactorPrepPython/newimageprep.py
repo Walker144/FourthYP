@@ -21,11 +21,12 @@ def display_image(image_array, title="Image"):
 #############################################
 #####           Main Code               #####
 #############################################
-image_path = "OneDrive_1_22-10-2025\DIC\TauFactor\TauFactorPrepPython\Testimagetiff.tiff"
+image_path = "OneDrive_1_22-10-2025\DIC\TauFactor\TauFactorPrepPython\Image_0002_0.tiff"
 image = Image.open(image_path)
-image = image.crop((image.width * .19, image.height * .3, image.width * .55, image.height *.88))
+#current setup is 25 3 62 88
+image = image.crop((image.width * .25, image.height * .3, image.width * .62, image.height *.88))
 
-saturation = np.asarray(image)
+saturation = np.array(image)
 plt.figure(figsize=(10, 6))
 plt.hist(saturation.flatten(), bins=256, range=(0, 256))
 plt.xlabel('Pixel Value')
@@ -33,13 +34,13 @@ plt.ylabel('Frequency')
 plt.title('Histogram of Saturation')
 plt.show()
 
-cutoff = 63
+cutoff = 72
 
 saturation[saturation > cutoff] = 250
 saturation[saturation <= cutoff] = 255
 saturation[saturation == 250] = 0
 
-Image.fromarray(saturation.astype(np.uint8)).save("OneDrive_1_22-10-2025\DIC\TauFactor\Example\processed_image.jpg")
+Image.fromarray(saturation.astype(np.uint8)).save("OneDrive_1_22-10-2025\DIC\TauFactor\HTimageprocessing\processed_image.jpg")
 
 
 

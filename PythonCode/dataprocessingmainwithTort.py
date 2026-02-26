@@ -17,6 +17,21 @@ f  = 'OneDrive_1_22-10-2025\matlabcode\HTdatacollection\Feb24\Test2.mat'
 # set the nth sampling rate, so the data that will be used is 1 in n, starting from 0
 nrate = 10
 
+taufactordatafile = 'OneDrive_1_22-10-2025\DIC\TauFactor\HTimageprocessing\Tauout.txt'
+taufile = open(taufactordatafile).read().split('\n')
+
+Tortuosity = []
+Effective_Diffusion = []
+Real_Timestamps = []
+
+for datapoint in taufile[0:-1]:
+    datapoint = datapoint.split(',')
+    Tortuosity.append(float(datapoint[2][1:-1]))
+    Effective_Diffusion.append(float(datapoint[1][1:-1]))
+    Real_Timestamps.append(datapoint[0].split(' ')[1])
+
+
+
 
 
 def smooth_data(data, window_size):
@@ -31,8 +46,18 @@ PPT3 = np.array(matdata['PPTdata'][2])[1::nrate]
 times = np.array(matdata['timestamps'][0])[1::nrate]
 FLOWdata = np.array(matdata['FLOWdata'])
 
-#This needs updating whenever the test is changed
-ppt_start_time = "16:25:10"
+#This needs updating whenever the test is changed, i hate that this is hard coded and not pulled from the .mat but that's life
+ppt_start_time = "16:25:10".split(':')
+matchid_start_time = Real_Timestamps[0].split(':')
+matchid_second_time = Real_Timestamps[1].split(':')
+
+timediff = - (int(ppt_start_time[1]) - int(matchid_start_time[1])) * 60 - (float(ppt_start_time[2]) - float(matchid_start_time[2]))
+dt = (int(matchid_second_time[1]) - int(matchid_start_time[1])) * 60 + (float(matchid_second_time[2]) - float(matchid_start_time[2]))
+Tortuosity_time = timediff + dt * np.arange(len(Real_Timestamps))
+
+
+
+
 
 #Using data collected to convert PPT voltages to Pressure (KPa), and to convert the flow count into a flowrate
 fs = int(1 / (times[100] - times[99])) 
@@ -155,14 +180,17 @@ for s in smoothregions:
     timestoplot  = np.concatenate([timestoplot ,  times[startindex:endindex]])
 
 
-ax3.plot(timestoplot,permstoplot, label = 'Permiability',color = 'deepskyblue',linestyle = '--')
+ax3.plot(timestoplot,permstoplot, label = 'Permiability',color = 'deepskyblue')
 ax3.set_xlabel('Time (s)')
 ax3.set_ylabel('Permiability')
 ax3.grid(True)
-ax3.legend()
 ax3.set_xlim(0,plotendtime) 
 ax3.set_ylim(0,max(permstoplot)*1.2)
+ax3.set_ylim(0,0.15)
+ax3b = ax3.twinx()
 
+ax3b.plot(Tortuosity_time,Tortuosity,label = 'Tortuosity',color = 'red',linestyle = '--')
+ax3b.set_ylabel("Tortuosity")
 
 plt.tight_layout()
 plt.show()

@@ -15,8 +15,7 @@ def display_image(image_array, title="Image"):
     plt.axis('off')
     plt.show()
 
-cutoff = 65
-file ="OneDrive_1_22-10-2025\DIC\TauFactor\TauFactorPrepPython\Image_0002_0.tiff"
+
 
 def plot_hisogram(file):
     image = Image.open(file)
@@ -31,13 +30,12 @@ def plot_hisogram(file):
 def binarise_image(file,cutoff):
     image_path = file
     image = Image.open(image_path)
-    image = image.crop((image.width * .19, image.height * .3, image.width * .55, image.height *.88))
+    image = image.crop((image.width * .25, image.height * .35, image.width * .62, image.height *.88))
     saturation = np.asarray(image).copy()
     saturation[saturation > cutoff] = 250
     saturation[saturation <= cutoff] = 255
     saturation[saturation == 250] = 0
     return saturation
 
-plot_hisogram(file)
-im = binarise_image(file,cutoff)
-display_image(im)
+
+
