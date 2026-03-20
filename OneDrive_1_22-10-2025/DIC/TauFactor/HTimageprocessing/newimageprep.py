@@ -27,10 +27,10 @@ def plot_hisogram(file):
     plt.title('Image Histogram')
     plt.show()
 
-def binarise_image(file,cutoff):
+def binarise_image(file,cutoff,crops):
     image_path = file
     image = Image.open(image_path)
-    image = image.crop((image.width * .25, image.height * .35, image.width * .62, image.height *.88))
+    image = image.crop((image.width * crops[0], image.height * crops[1], image.width * crops[2], image.height *crops[3]))
     saturation = np.asarray(image).copy()
     saturation[saturation > cutoff] = 250
     saturation[saturation <= cutoff] = 255

@@ -165,8 +165,8 @@ ax4.set_xlim(0,plotendtime)
 
 
 
-permiabilitysmoothed = flowrate / hgraidentsmoothed * 1000 #multiplied by 1000 due to geometry, this needs checking next term so don't use for report results
-permiabilitysmoothed = np.array(smooth_data(permiabilitysmoothed,1000)) #rolling average of 1000 frames taken so that the data plots better
+permeabilitysmoothed = flowrate / hgraidentsmoothed * 1000 #multiplied by 1000 due to geometry, this needs checking next term so don't use for report results
+permeabilitysmoothed = np.array(smooth_data(permeabilitysmoothed,1000)) #rolling average of 1000 frames taken so that the data plots better
 
 
 
@@ -176,17 +176,16 @@ permstoplot = []
 for s in smoothregions:
     startindex = min(range(len(times)), key=lambda i: abs(times[i] - s[0]))
     endindex = min(range(len(times)), key=lambda i: abs(times[i] - s[1]))
-    permstoplot = np.concatenate([permstoplot, permiabilitysmoothed[startindex:endindex]])
+    permstoplot = np.concatenate([permstoplot, permeabilitysmoothed[startindex:endindex]])
     timestoplot  = np.concatenate([timestoplot ,  times[startindex:endindex]])
 
 
-ax3.plot(timestoplot,permstoplot, label = 'Permiability',color = 'deepskyblue')
+ax3.plot(timestoplot,permstoplot, label = 'Permeability',color = 'deepskyblue')
 ax3.set_xlabel('Time (s)')
-ax3.set_ylabel('Permiability')
+ax3.set_ylabel('Permeability')
 ax3.grid(True)
 ax3.set_xlim(0,plotendtime) 
 ax3.set_ylim(0,max(permstoplot)*1.2)
-ax3.set_ylim(0,0.15)
 ax3b = ax3.twinx()
 
 ax3b.plot(Tortuosity_time,Tortuosity,label = 'Tortuosity',color = 'red',linestyle = '--')

@@ -13,7 +13,7 @@ import h5py
 #####       FILE TO OPEN        #####
 #####################################
 
-f  = 'OneDrive_1_22-10-2025\matlabcode\HTdatacollection\Feb24\Test2.mat'
+f  = 'OneDrive_1_22-10-2025\matlabcode\HTdatacollection\Mar02\Test2.mat'
 # set the nth sampling rate, so the data that will be used is 1 in n, starting from 0
 nrate = 10
 
@@ -54,31 +54,24 @@ PPT1 = plottingfunctions.butterfilter(PPT1,fs,cutoff)
 PPT2 = plottingfunctions.butterfilter(PPT2,fs,cutoff)
 PPT3 = plottingfunctions.butterfilter(PPT3,fs,cutoff)
 
-fsmooth = outfilename = f[:-4] + 'times.txt'
-smoothdata = open(fsmooth,'r').read().split('\n')
-smoothregions = []
-
-for s in smoothdata:
-    slist = s.split(',')
-    smoothregions.append([float(slist[0]),float(slist[1])])
 
 
-PPT1smoothed = plottingfunctions.replacewithconstants(PPT1,times,smoothregions)
-PPT2smoothed = plottingfunctions.replacewithconstants(PPT2,times,smoothregions)
-PPT3smoothed = plottingfunctions.replacewithconstants(PPT3,times,smoothregions)
-plotendtime = smoothregions[-1][1] - 10
+
 
 
 
 #calculate flowrate based off flowvolume, must be multiplied to get from gradient / frame to gradient/ s 
 flowrate = plottingfunctions.butterfilter(flowrate,fs,cutoff)
 flowrateraw = np.array(flowrate)
-flowrate = plottingfunctions.replacewithconstants(flowrateraw,times,smoothregions)
+
 
 
 
 #adjusting PPT data to get the change in pressure rather than considering total pressure as Darcy's law ignores the head difference ( so for static h = 0 at both)
-noflowtimes = [smoothregions[0][0] + 1,smoothregions[0][1] - 1]
+noflowtimes = [0,10]
+plotendtime = times[-1] - 10
+
+
 timelist = times.tolist()
 startindex = min(range(len(timelist)), key=lambda i: abs(timelist[i] - noflowtimes[0]))
 endindex = min(range(len(timelist)), key=lambda i: abs(timelist[i] - noflowtimes[1]))
@@ -91,9 +84,6 @@ PPT2adjusted = (PPT2 - PPT2base) * 1000
 PPT3adjusted = (PPT3 - PPT2base) * 1000
 
 
-PPT1sadjusted = (PPT1smoothed - PPT1base) * 1000
-PPT2sadjusted = (PPT2smoothed - PPT2base) * 1000
-PPT3sadjusted = (PPT3smoothed - PPT3base) * 1000
 
 
 
@@ -102,9 +92,9 @@ PPT3sadjusted = (PPT3smoothed - PPT3base) * 1000
 fig, (ax1, ax2,ax3,ax4) = plt.subplots(4, 1, figsize=(10, 8))
 
 
-ax1.plot(times,PPT1sadjusted, label = 'PPT1 offset')
-ax1.plot(times,PPT2sadjusted, label = 'PPT2 offset')
-ax1.plot(times,PPT3sadjusted, label = 'PPT3 offset')
+ax1.plot(times,PPT1adjusted, label = 'PPT1 offset')
+ax1.plot(times,PPT2adjusted, label = 'PPT2 offset')
+ax1.plot(times,PPT3adjusted, label = 'PPT3 offset')
 ax1.set_xlabel('Time')
 ax1.set_ylabel('Pressure (Pa)')
 ax1.legend()
@@ -124,44 +114,37 @@ ax2.set_xlim(0,plotendtime)
 
 #calculating hydraulic gradient is deltah = deltap / rho g
 rhog = 1000 * 9.806
-hgraidentsmoothed = (PPT1sadjusted - PPT3sadjusted) / (rhog * 0.2)  #0.2 as 200mm between PPT1 and PPT3
+hgraident = (PPT1adjusted - PPT3adjusted) / (rhog * 0.2)  #0.2 as 200mm between PPT1 and PPT3
 
 
 #plotting hydraulic gradient with critical hydraulic gradient
-ax4.plot(times, smooth_data(hgraidentsmoothed,1000),label = 'Hydrualic Gradient between PPT1 and PPT3' , color = 'blue')
+ax3.plot(times, smooth_data(hgraident,1000),label = 'Hydrualic Gradient between PPT1 and PPT3' , color = 'blue')
 icrit = 1.1113
-ax4.plot([0,times[len(times)-1]],[icrit,icrit],color = 'red',linestyle = '--')
+ax3.plot([0,times[len(times)-1]],[icrit,icrit],color = 'red',linestyle = '--')
 
-ax4.set_xlabel('Time (s)')
-ax4.set_ylabel('Hydraulic Gradient')
-ax4.legend()
-ax4.grid(True)
-ax4.set_xlim(0,plotendtime)
+ax3.set_xlabel('Time (s)')
+ax3.set_ylabel('Hydraulic Gradient')
+ax3.legend()
+ax3.grid(True)
+ax3.set_xlim(0,plotendtime)
 
 
 
-permiabilitysmoothed = flowrate / hgraidentsmoothed * 1000 #multiplied by 1000 due to geometry, this needs checking next term so don't use for report results
+permiabilitysmoothed = flowrate / hgraident * 1000 #multiplied by 1000 due to geometry, this needs checking next term so don't use for report results
 permiabilitysmoothed = np.array(smooth_data(permiabilitysmoothed,1000)) #rolling average of 1000 frames taken so that the data plots better
 
 
 
 
-timestoplot = []
-permstoplot = []
-for s in smoothregions:
-    startindex = min(range(len(times)), key=lambda i: abs(times[i] - s[0]))
-    endindex = min(range(len(times)), key=lambda i: abs(times[i] - s[1]))
-    permstoplot = np.concatenate([permstoplot, permiabilitysmoothed[startindex:endindex]])
-    timestoplot  = np.concatenate([timestoplot ,  times[startindex:endindex]])
 
 
-ax3.plot(timestoplot,permstoplot, label = 'Permiability',color = 'deepskyblue',linestyle = '--')
-ax3.set_xlabel('Time (s)')
-ax3.set_ylabel('Permiability')
-ax3.grid(True)
-ax3.legend()
-ax3.set_xlim(0,plotendtime) 
-ax3.set_ylim(0,max(permstoplot)*1.2)
+ax4.plot(times,permiabilitysmoothed, label = 'Permiability')
+ax4.set_xlabel('Time (s)')
+ax4.set_ylabel('Permiability')
+ax4.grid(True)
+ax4.legend()
+ax4.set_xlim(0,plotendtime) 
+ax4.set_ylim(0,max(permiabilitysmoothed)*1.2)
 
 
 plt.tight_layout()
