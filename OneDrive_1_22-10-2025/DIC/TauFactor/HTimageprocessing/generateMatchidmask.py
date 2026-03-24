@@ -51,7 +51,10 @@ L = np.array(matdata["L"])
 
 
 
-slices = createTaufactorlayersellipse.create_taufactor_arrays(imagesize,Centersv,Centersu,Areas,Contactlist,L)
+slices,dataexport = createTaufactorlayersellipse.create_taufactor_arrays(imagesize,Centersv,Centersu,Areas,Contactlist,L,True)
+print(dataexport)
+dataexport.to_csv("OneDrive_1_22-10-2025\DIC\TauFactor\HTimageprocessing\MatchIDanalysis\InitalElipses.csv")
+
 
 smallmask = slices[1]
 imageheight = 5120
@@ -59,6 +62,9 @@ imagewidth = 5120
 
 maskheight, maskwidth = smallmask.shape
 lefttrim, toptrim = int(imagewidth * croplist[0]), int(imageheight * croplist[1])
+
+open("OneDrive_1_22-10-2025\DIC\TauFactor\HTimageprocessing\MatchIDanalysis\Matchidmasktrinsizes.txt",'w').write(f'{lefttrim},{toptrim}')
+
 print(lefttrim,toptrim)
 print(maskwidth,maskheight)
 rawimage = Image.open(file)
