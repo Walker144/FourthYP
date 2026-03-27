@@ -66,7 +66,7 @@ for im in imagefile[1::2]:
     Deff.append(float(d))
     particlecounts.append(numareas)
     tauout += f'{im[1]},{d},{t},{numareas}\n'
-    tauoutfile = open('OneDrive_1_22-10-2025\DIC\TauFactor\HTimageprocessing\Tauout.txt','w')
+    tauoutfile = open('OneDrive_1_22-10-2025\DIC\TauFactor\HTimageprocessing\Tauout2.txt','w')
     tauoutfile.write(tauout)
     tauoutfile.close()
 

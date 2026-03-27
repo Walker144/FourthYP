@@ -52,6 +52,29 @@ for pointindex in range(len(initialpointsX)):
 particleIDs = np.array(list(elipseindexes.keys())[1:])
 
 
+def calculate_Matrixes(globalP,globalQ):
+
+
+
+    Pbar = globalP.mean(1)
+    Qbar = globalQ.mean(1)
+    
+    
+    localP = globalP - Pbar
+    localQ = globalQ - Qbar
+    
+
+    F = localQ * localP.transpose() * (localP * localP.transpose()) ** -1
+    U,S,Vt = np.linalg.svd(F)
+    R = U * Vt
+
+    
+    translationVector = Qbar - R * Pbar
+
+    return R,translationVector,S
+    
+
+
 
 
 
@@ -77,45 +100,87 @@ def calculate_movement_vectors(particleID,currentdataframe,elipseindexes=elipsei
         
     if particleXP == []:
         return -1,-1
+    
     particleXP, particleYP, particleXQ, particleYQ = np.array(particleXP), np.array(particleYP), np.array(particleXQ), np.array(particleYQ)
+    globalP,globalQ = np.matrix([particleXP,particleYP]),np.matrix([particleXQ,particleYQ])
 
+    RotationMatrix,translationVector,S = calculate_Matrixes(globalP,globalQ)
 
-    Pbar = [sum(particleXP)/len(particleXP),sum(particleYP)/len(particleYP)]
-    Qbar = [sum(particleXQ)/len(particleXQ),sum(particleYQ)/len(particleYQ)]
-
-    particleXPlocal, particleYPlocal, particleXQlocal, particleYQlocal = particleXP - Pbar[0],  particleYP - Pbar[1], particleXQ - Qbar[0], particleYQ - Qbar[1]
-
-    Qmatrix = np.matrix([particleXQlocal,particleYQlocal])
-    Pmatrix = np.matrix([particleXPlocal,particleYPlocal])
-
-    #RotationMatrix = Qmatrix * Pmatrix.transpose() * (Pmatrix * Pmatrix.transpose()) **-1
-
-    H = Qmatrix * Pmatrix.transpose() * (Pmatrix * Pmatrix.transpose()) **-1
-    U,S,Vt = np.linalg.svd(H)
-    RotationMatrix = U * Vt
-
-
-    print(S)
-    if max(abs(S-1)) > 0.45:
-        print(particleID)
+    
+    while max(abs(S-1)) > .4:
         
 
-    translationVector = np.matrix(Qbar).transpose() - RotationMatrix * np.matrix(Pbar).transpose()
+        if len(trackablepointslist) < 5:
+            return -1,-1
+        for removedpoints in range(1):
+            pointerrors = []
+            for i in range(len(trackablepointslist)):
+                
+                Pdistance = np.linalg.norm(globalP.copy() - globalP[:,i],axis=0)
+                Qdistance = np.linalg.norm(globalQ.copy() - globalQ[:,i],axis=0)
+
+                Pdistance = np.hstack([Pdistance[0:i], Pdistance[i+1:]])
+                Qdistance = np.hstack([Qdistance[0:i], Qdistance[i+1:]])
+
+                
+                 
+                strain = abs(Qdistance - Pdistance) / Pdistance 
+                strain = np.array(strain)
+                
+                pointerrors.append(sum(strain**2))
+                
+            worstpoint = np.where(pointerrors == max(pointerrors))[0][0]
+            
+            
+            globalP = np.hstack([globalP[:,0:worstpoint],globalP[:,worstpoint+1::]])
+            globalQ = np.hstack([globalQ[:,0:worstpoint],globalQ[:,worstpoint+1::]])
+            trackablepointslist = np.hstack([trackablepointslist[0:worstpoint],trackablepointslist[worstpoint+1::]])
+        RotationMatrix,translationVector,S = calculate_Matrixes(globalP,globalQ)
+
+    plt.scatter(np.array(globalQ[0]),np.array(globalQ[1]),color = 'blue',s=5)
+        
+        
+
+
+            
+
+            
+
+    
+
+
 
     return RotationMatrix,translationVector
+    
 
 
-csvtolookat = pd.read_csv(correlationoutputpath + "\\" + csvlist[800])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+csvtolookat = pd.read_csv(correlationoutputpath + "\\" + csvlist[400])
 
 finalXpos, finalYpos = np.array(csvtolookat["disp.Horizontal Displacement U [Pixel]"]) + initialpointsX,np.array(csvtolookat["disp.Vertical Displacement V [Pixel]"] + initialpointsY)
   
 failed = 0
-particleIDs = [394]
 
 for particleID in particleIDs:
     if elipseindexes[particleID] != []:
 
-
+        
         RotationMatrix,translationVector = calculate_movement_vectors(particleID,csvtolookat)
         try:
             if RotationMatrix == -1:
@@ -123,8 +188,8 @@ for particleID in particleIDs:
         except:
             newparticlecoords = RotationMatrix * np.matrix([initialXCentres[particleID],initialYCentres[particleID]]).transpose() + translationVector
             newrotation = initialanglerad[particleID] + np.arctan2(RotationMatrix[1,0],RotationMatrix[0,0])
-            plt.gca().add_patch(Ellipse(xy=newparticlecoords,width = initialA[particleID]*2,height = initialB[particleID]*2,angle=newrotation * 180/ np.pi,edgecolor="black",linewidth=2))
-            plt.scatter(finalXpos[elipseindexes[particleID]],finalYpos[elipseindexes[particleID]],color = 'red')
+            plt.gca().add_patch(Ellipse(xy=newparticlecoords,width = initialA[particleID]*2,height = initialB[particleID]*2,angle=newrotation * 180/ np.pi,edgecolor="black",linewidth=2,fill = False))
+            #plt.scatter(finalXpos[elipseindexes[particleID]],finalYpos[elipseindexes[particleID]],color = 'red',s=2) 
     else:
         pass
 #TO draw an elipse: plt.gca().add_patch(Ellipse(xy=newparticlecoords,width = initialA[particleID]*2,height = initialB[particleID]*2,angle=newrotation * 180/ np.pi,color = "red"))

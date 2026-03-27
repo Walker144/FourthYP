@@ -11,9 +11,9 @@ import runtaufactor
 import createTaufactorlayersellipse
 
 
-cutoff = 100
+cutoff = 70
 #Crop Left top right bottom
-croplist = [.28,.25,.74,.93]
+croplist = [.35,.1,.88,.97]
 
 '''imagecsvpath = "OneDrive_1_22-10-2025\DIC\TauFactor\HTimageprocessing\Image_0000_0.tiff"
 imagefile = open(imagecsvpath,'r').read().split('\n')
@@ -26,7 +26,7 @@ im[0] = filepath + part
 file = im[0]
 print(im[0])'''
 
-file = "OneDrive_1_22-10-2025\DIC\TauFactor\HTimageprocessing\Image_0000_0.tiff"
+file = "I:\Image_0000_0.tiff"
 newimageprep.plot_hisogram(file)
 im = newimageprep.binarise_image(file,cutoff,croplist)
 newimageprep.display_image(im)
@@ -50,7 +50,7 @@ L = np.array(matdata["L"])
 
 
 
-
+print(Areas)
 slices,dataexport = createTaufactorlayersellipse.create_taufactor_arrays(imagesize,Centersv,Centersu,Areas,Contactlist,L,True)
 print(dataexport)
 dataexport.to_csv("OneDrive_1_22-10-2025\DIC\TauFactor\HTimageprocessing\MatchIDanalysis\InitalElipses.csv")

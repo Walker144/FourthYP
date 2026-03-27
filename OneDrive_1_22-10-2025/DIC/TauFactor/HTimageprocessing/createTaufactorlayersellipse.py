@@ -73,8 +73,8 @@ def create_taufactor_arrays(imagesize,Centersv,Centersu,Areas,Contactlist,L,Gene
 
 
     layers = np.zeros(shape=(len(Radius1),int(imagesize[0][0]),int(imagesize[1][0])))
-    CircleAcutoff = 4000
-    ElipseAcutoff = 8000
+    CircleAcutoff = 2000
+    ElipseAcutoff = 25000
     alist = []
     blist = []
     anglelist = []
