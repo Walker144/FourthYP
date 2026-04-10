@@ -1,5 +1,6 @@
 % Prepare images for taufactor + Coordination number calc + local e
 % O. Adamidis 2024
+% A. Walker 2025-2026
 
 clear
 
@@ -57,6 +58,13 @@ Radius1 = [.87,.97,1,1,.97,.90,.82,.76,.73,.70,.68,.67,.67];
 
 figure; plot(Areas,'o'); %to help identify areas
 
+imsize = [size(ImageBW,1),size(ImageBW,2)];
+
+save("Tauimagevec.mat","imsize","Centersv","Centersu","Areas","CN")
+imsize
+
+
+
 Section = zeros(size(ImageBW,1),size(ImageBW,2),size(Radius1,2));
 for kk=1:size(Radius1,2)
     Image = Section(:,:,kk);
@@ -76,6 +84,9 @@ for kk=1:size(Radius1,2)
     % imshow(Image)
     Section(:,:,kk) = Image;
 end
+
+
+
 
 %% save images for tau factor Scale down to make it faster if needed
 % figure; imshow(imresize(Section(:,:,1),0.5,'nearest')); % check resizing
