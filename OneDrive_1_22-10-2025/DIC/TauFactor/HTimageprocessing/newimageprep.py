@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 def display_image(image_array, title="Image"):
     plt.figure(figsize=(8, 6))
-    plt.imshow(image_array, cmap='gray')
+    plt.imshow(image_array * 128, cmap='gray')
     plt.title(title)
     plt.axis('off')
     plt.show()

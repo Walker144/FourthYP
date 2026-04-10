@@ -64,7 +64,7 @@ def create_index_dict(maxindex,L):
     return ydict,xdict
 
 
-def create_taufactor_arrays(imagesize,Centersv,Centersu,Areas,Contactlist,L,GenerateExport = False):
+def create_taufactor_arrays(imagesize,Centersv,Centersu,Areas,Contactlist,L,GenerateExport = False,sizecutoff = [2000,25000]):
     Radius1 = [.97,1,1,.97,.90,.82,.76,.73,.70,.68,.67,.67]
     Radius2 = [.93,.99,1,1,.99,.94,.90,.87,.85,.84,.83,.82,.82]
 
@@ -73,8 +73,7 @@ def create_taufactor_arrays(imagesize,Centersv,Centersu,Areas,Contactlist,L,Gene
 
 
     layers = np.zeros(shape=(len(Radius1),int(imagesize[0][0]),int(imagesize[1][0])))
-    CircleAcutoff = 2000
-    ElipseAcutoff = 25000
+    CircleAcutoff,ElipseAcutoff = sizecutoff
     alist = []
     blist = []
     anglelist = []
@@ -88,6 +87,13 @@ def create_taufactor_arrays(imagesize,Centersv,Centersu,Areas,Contactlist,L,Gene
         
         
         if Area > CircleAcutoff and Area <  ElipseAcutoff:
+            r = (Area/np.pi)**.5
+            alist.append(r)
+            blist.append(r)
+            anglelist.append(0)
+            xmidlist.append(su)
+            ymidlist.append(sv)
+
             for j in range(len(Radius1)):
                 cv2.circle(layers[j],(su,sv),int(Radius1[j] * (Area/np.pi) **0.5),255,-1)
 
@@ -113,6 +119,71 @@ def create_taufactor_arrays(imagesize,Centersv,Centersu,Areas,Contactlist,L,Gene
 
     else:
         return layers
+
+
+
+def create_taufactor_arrays_from_vectors(imagesize,Centersv,Centersu,Areas,Contactlist,L,GenerateExport = False,sizecutoff = [2000,25000]):
+    Radius1 = [.97,1,1,.97,.90,.82,.76,.73,.70,.68,.67,.67]
+    Radius2 = [.93,.99,1,1,.99,.94,.90,.87,.85,.84,.83,.82,.82]
+
+    ydict,xdict = create_index_dict(len(Areas),L)
+
+
+
+    layers = np.zeros(shape=(len(Radius1),int(imagesize[0][0]),int(imagesize[1][0])))
+    CircleAcutoff,ElipseAcutoff = sizecutoff
+    alist = []
+    blist = []
+    anglelist = []
+    xmidlist = []
+    ymidlist = []
+    for i in range(len(Areas)):
+        Area = Areas[i]
+        sv = int(Centersv[i])
+        su = int(Centersu[i])
+        Contacts = Contactlist[i] 
+        
+        
+        if Area > CircleAcutoff and Area <  ElipseAcutoff:
+            r = (Area/np.pi)**.5
+            alist.append(r)
+            blist.append(r)
+            anglelist.append(0)
+            xmidlist.append(su)
+            ymidlist.append(sv)
+
+            for j in range(len(Radius1)):
+                cv2.circle(layers[j],(su,sv),int(Radius1[j] * (Area/np.pi) **0.5),255,-1)
+
+        elif Area > ElipseAcutoff:
+            angle = calculate_elipse_rotation(xdict[i+1],ydict[i+1])
+            alpha = 7.5/14
+            a = int((Area/(np.pi*alpha))**0.5)
+            b = int(a * alpha)
+            alist.append(a)
+            blist.append(b)
+            anglelist.append(-angle+90)
+            xmidlist.append(su)
+            ymidlist.append(sv)
+
+            for j in range(len(Radius1)):
+                cv2.ellipse(layers[j],(su,sv),(int(a*Radius2[j]),int(b*Radius1[j])),-angle+90,0,360,color= 255,thickness=-1)
+
+
+    if GenerateExport:
+        dfexport = pd.DataFrame({"Alist":alist,"Blist":blist,"AngleList":anglelist,"CentreX":xmidlist,"CentreY":ymidlist})
+        return layers,dfexport
+
+
+    else:
+        return layers
+
+
+
+
+
+
+
 
 def run_taufactor_from_mat(f):
     matdata = h5py.File(f,'r+')
