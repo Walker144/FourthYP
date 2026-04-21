@@ -30,6 +30,10 @@ h12 = smooth_data(datafile["PPT1 adjusted"] - datafile["PPT2 adjusted"],250) *10
 h23 = smooth_data(datafile["PPT2 adjusted"] - datafile["PPT3 adjusted"],250) *1000 / (1000*9.806 * .1)
 h13 = smooth_data(datafile["PPT1 adjusted"] - datafile["PPT3 adjusted"],250)*1000/  (1000*9.806 * .2)
 
+hcrit12 = (2.5-0.9806) / (1 + np.mean(datafile["VoidRatio12"][0:1000]))
+hcrit23 = (2.5-0.9806)  / (1 + np.mean(datafile["VoidRatio23"][0:1000]))
+hcrit13 = (2.5-0.9806) / (1 + np.mean(datafile["VoidRatio13"][0:1000]))
+
 k_meas12 = datafile["flowrate"] / h12 * 1000
 k_meas23 = datafile["flowrate"] / h23 * 1000
 k_meas13 = datafile["flowrate"] / h13 * 1000
@@ -44,6 +48,11 @@ ax2.set_ylabel(r'Flow rate ($m^3s^{-1}$)')
 ax3.plot(datafile["time"],h12,label = "PPT1 - PPT2")
 ax3.plot(datafile["time"],h23,label = "PPT2 - PPT3")
 ax3.plot(datafile["time"],h13,label = "PPT1 - PPT3")
+
+ax3.axhline(y=hcrit12, color="tab:blue", linestyle='--')
+ax3.axhline(y=hcrit23, color="tab:orange", linestyle='--')
+ax3.axhline(y=hcrit13, color="tab:green", linestyle='--')
+
 ax3.grid()
 ax3.legend()
 ax3.set_xlabel("Time (s)")
