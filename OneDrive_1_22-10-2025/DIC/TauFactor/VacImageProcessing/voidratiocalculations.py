@@ -11,18 +11,21 @@ import runtaufactor
 import Taufactorrunfromvectors
 import math
 
-vectorfolder = "H:\Apr01\Test4\ImageVectors"
-imagedatafile = "H:\Apr01\Test4\Test\Image.csv"
-outputfile = "H:\Apr01\Test4\VoidRatio23.csv"
+vectorfolder = "I:\Apr01\Test6\ImageVectors"
+imagedatafile = "I:\Apr01\Test6\Test2\Image.csv"
+outputfile = "I:\Apr01\Test6\VoidRatio23.csv"
 XrangeWanted = [0,10000]
-YrangeWanted = [0,1870]
+YrangeWanted = [450,2344]
 #test 2,3,4 y split is 1870
 #mar27 test 1, y 650, 2300
 #mar27 Test 3 y 750,2400
 #Apr01 Test 1 750 ,2434
 
 
-if __name__ == "__main__":
+
+def void_ratio_run(vectorfolder,imagedatafile,outputfile,XrangeWanted,Yrangewanted,first=True):
+
+
     vectorfilelist = os.listdir(vectorfolder)
     imagedatasheet = open(imagedatafile).read().split('\n')[1::]
 
@@ -35,7 +38,7 @@ if __name__ == "__main__":
     
 
 
-    first = True
+
     imagecount = 0
     for vectorset in vectorfilelist:
         
@@ -61,7 +64,7 @@ if __name__ == "__main__":
         
 
         taufactorlayersuc = Taufactorrunfromvectors.create_taufactor_set(Alist,Blist,AngleList,CentreX,CentreY,ellipsescalefactors=[.93,.99,1,1,.99,.94,.90,.87,.85,.84,.83,.82,.82],circlescalefactors=[.87,.97,1,1,.97,.9,.82,.76,.73,.70,.68,.67,.67])
-        taufactorlayers = taufactorlayersuc[:,max(0,YrangeWanted[0]):min(size[0],YrangeWanted[1]),:]
+        taufactorlayers = taufactorlayersuc[:,max(0,Yrangewanted[0]):min(size[0],Yrangewanted[1]),max(0,XrangeWanted[0]):min(size[1],XrangeWanted[1])]
 
 
 
@@ -87,5 +90,30 @@ if __name__ == "__main__":
         voiddata.loc[len(voiddata)] = ["Image_" +  imagenum,voidratio,imagetimestamp]
 
         voiddata.to_csv(outputfile)
-
+        
         Taufactorrunfromvectors.loading_bar(imagecount / len(vectorfilelist) * 100, texttoshow= f' Current image {imagenum} Void ratio {voidratio}')
+
+
+
+if __name__ == "__main__":
+    vectorfolder = "I:\Apr16\Test3\ImageVectors"
+    imagedatafile = "I:\Apr16\Test3\Test\Image.csv"
+    
+
+    outputfile = "I:\Apr16\Test3\VoidRatio13test.csv"
+    XrangeWanted = [0,10000]
+    YrangeWanted = [0,10000]
+    #test 2,3,4 y split is 1870
+    #mar27 test 1, y 650, 2300
+    #mar27 Test 3 y 750,2400
+    #Apr01 Test 1 750 ,2434
+    void_ratio_run(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,first= True)
+
+
+    outputfile = "I:\Apr16\Test3\VoidRatio12test.csv"
+    YrangeWanted = [1929,10000]
+    void_ratio_run(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,first= False)
+
+    outputfile = "I:\Apr16\Test3\VoidRatio23test.csv"
+    YrangeWanted = [0,1929]
+    void_ratio_run(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,first= False)

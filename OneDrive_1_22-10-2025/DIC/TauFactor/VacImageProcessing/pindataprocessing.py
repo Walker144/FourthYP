@@ -13,7 +13,7 @@ import pandas as pd
 
 import os
 os.system("")
-cutoff = 40
+cutoff = 50
 
 #Apr1 Test 1
 cropsizes = [1474,360,3950,4875]
@@ -30,9 +30,11 @@ cropsizes = [1860,933,4300,4730]
 #Mar31 Test 2
 '''cropsizes = [1570,590,4000,4800]'''
 
+#Apr16 Test 1
+cropsizes = [1720,733,4200,4730]
 
-imagefile = "H:\Apr01\Test2\Test\Image.csv"
-vectorfolder = "H:\Apr01\Test2\ImageVectors2\\"
+imagefile = "I:\Apr16\Test3\Test\Image.csv"
+vectorfolder = "I:\Apr16\Test3\ImageVectors\\"
 
 def filterimage(imarray,cutoff):
     filterimarray = imarray
@@ -66,7 +68,7 @@ if __name__ == "__main__":
     first = True
     countnum = 0
     print(len(imagestoconvert[1::2]))
-    for imagestring in imagestoconvert[1::2]:
+    for imagestring in imagestoconvert[1::2 ]:
         countnum += 1
 
         imagestring = imagestring.split(';')

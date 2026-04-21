@@ -16,14 +16,38 @@ import pandas as pd
 
 
 ## Apr01 Test 3
-f  = "H:\Apr01\Test3\Apr01Test3.mat"
-tortuosity12file = "H:\Apr01\Test3\Tortuosity12.csv"
-tortuosity23file = "H:\Apr01\Test3\Tortuosity23.csv"
-tortuosity13file = "H:\Apr01\Test3\Tortuosity13.csv"
-voidratio12file = "H:\Apr01\Test3\VoidRatio12.csv"
-voidratio23file = "H:\Apr01\Test3\VoidRatio23.csv"
-voidratio13file = "H:\Apr01\Test3\VoidRatio13.csv"
+f  = "I:\Apr01\Test3\Apr01Test3.mat"
+tortuosity12file = "I:\Apr01\Test3\Tortuosity12.csv"
+tortuosity23file = "I:\Apr01\Test3\Tortuosity23.csv"
+tortuosity13file = "I:\Apr01\Test3\Tortuosity13.csv"
+voidratio12file = "I:\Apr01\Test3\VoidRatio12.csv"
+voidratio23file = "I:\Apr01\Test3\VoidRatio23.csv"
+voidratio13file = "I:\Apr01\Test3\VoidRatio13.csv"
 ppt_start_time = "11:26:46"
+cleanuptimes = [[0,13],[13,63],[950,992],[992,1008]]
+
+
+
+#Apr01 Test 6
+'''f  = "I:\Apr01\Test6\Apr01Test6.mat"
+tortuosity12file = "I:\Apr01\Test6\Tortuosity12.csv"
+tortuosity23file = "I:\Apr01\Test6\Tortuosity23.csv"
+#tortuosity13file = "I:\Apr01\Test6\Tortuosity13.csv"
+voidratio12file = "I:\Apr01\Test6\VoidRatio12.csv"
+voidratio23file = "I:\Apr01\Test6\VoidRatio23.csv"
+voidratio13file = "I:\Apr01\Test6\VoidRatio13.csv"
+ppt_start_time = "17:11:28"'''
+
+'''f  = "I:\Apr01\Test5\Apr01Test5.mat"
+tortuosity12file = "I:\Apr01\Test5\Tortuosity12.csv"
+tortuosity23file = "I:\Apr01\Test5\Tortuosity23.csv"
+#tortuosity13file = "I:\Apr01\Test6\Tortuosity13.csv"
+voidratio12file = "I:\Apr01\Test5\VoidRatio12.csv"
+voidratio23file = "I:\Apr01\Test5\VoidRatio23.csv"
+voidratio13file = "I:\Apr01\Test5\VoidRatio13.csv"
+ppt_start_time = "16:25:09"'''
+
+
 
 
 ## Apr01 Test 1
@@ -38,22 +62,22 @@ ppt_start_time = "9:51:49"'''
 
 
 '''#Mar 27 Test 1
-f  = "H:\Mar27\Test1\Mar27Test1.mat"
-tortuosity12file = "H:\Mar27\Test1\Tortuosity12.csv"
-tortuosity23file = "H:\Mar27\Test1\Tortuosity23.csv"
-voidratio12file = "H:\Mar27\Test1\VoidRatio12.csv"
-voidratio23file = "H:\Mar27\Test1\VoidRatio23.csv"
-voidratio13file = "H:\Mar27\Test1\VoidRatio13.csv"
+f  = "I:\Mar27\Test1\Mar27Test1.mat"
+tortuosity12file = "I:\Mar27\Test1\Tortuosity12.csv"
+tortuosity23file = "I:\Mar27\Test1\Tortuosity23.csv"
+voidratio12file = "I:\Mar27\Test1\VoidRatio12.csv"
+voidratio23file = "I:\Mar27\Test1\VoidRatio23.csv"
+voidratio13file = "I:\Mar27\Test1\VoidRatio13.csv"
 ppt_start_time = "11:28:41"'''
 
 #Mar 27 Test 3
 
-'''f  = "H:\Mar27\Test3\Mar27Test3.mat"
-tortuosity12file = "H:\Mar27\Test3\Tortuosity12.csv"
-tortuosity23file = "H:\Mar27\Test3\Tortuosity23.csv"
-voidratio12file = "H:\Mar27\Test3\VoidRatio12.csv"
-voidratio23file = "H:\Mar27\Test3\VoidRatio23.csv"
-voidratio13file = "H:\Mar27\Test3\VoidRatio13.csv"
+'''f  = "I:\Mar27\Test3\Mar27Test3.mat"
+tortuosity12file = "I:\Mar27\Test3\Tortuosity12.csv"
+tortuosity23file = "I:\Mar27\Test3\Tortuosity23.csv"
+voidratio12file = "I:\Mar27\Test3\VoidRatio12.csv"
+voidratio23file = "I:\Mar27\Test3\VoidRatio23.csv"
+voidratio13file = "I:\Mar27\Test3\VoidRatio13.csv"
 ppt_start_time = "12:28:49"'''
 
 #Apr01 Test 4
@@ -65,6 +89,40 @@ voidratio12file = "H:\Apr01\Test4\VoidRatio12.csv"
 voidratio23file = "H:\Apr01\Test4\VoidRatio23.csv"
 voidratio13file = "H:\Apr01\Test4\VoidRatio13.csv"
 ppt_start_time = "11:44:29"'''
+
+
+#Apr16 Test 1
+f  = "I:\Apr16\Test1\Apr16Test1.mat"
+tortuosity12file = "I:\Apr16\Test1\Tortuosity12.csv"
+tortuosity23file = "I:\Apr16\Test1\Tortuosity23.csv"
+tortuosity13file = "I:\Apr16\Test1\Tortuosity13.csv"
+voidratio12file = "I:\Apr16\Test1\VoidRatio12.csv"
+voidratio23file = "I:\Apr16\Test1\VoidRatio23.csv"
+voidratio13file = "I:\Apr16\Test1\VoidRatio13.csv"
+CN12file = "I:\Apr16\Test1\CoordinationNumbers12.csv"
+CN23file = "I:\Apr16\Test1\CoordinationNumbers23.csv"
+CN13file = "I:\Apr16\Test1\CoordinationNumbers13.csv"
+
+
+ppt_start_time = "15:18:45"
+
+cleanuptimes = [[0,18],[18,57],[57,100],[100,143],[143,185]]
+
+
+#Apr16 Test 2
+'''f  = "I:\Apr16\Test2\Apr16Test2.mat"
+tortuosity12file = "I:\Apr16\Test2\Tortuosity12.csv"
+tortuosity23file = "I:\Apr16\Test2\Tortuosity23.csv"
+tortuosity13file = "I:\Apr16\Test2\Tortuosity13.csv"
+voidratio12file = "I:\Apr16\Test2\VoidRatio12.csv"
+voidratio23file = "I:\Apr16\Test2\VoidRatio23.csv"
+voidratio13file = "I:\Apr16\Test2\VoidRatio13.csv"
+
+
+ppt_start_time = "15:42:24"
+
+cleanuptimes = [[0,17],[17,59],[59,101],[101,142],[142,186]]'''
+
 
 
 
@@ -89,7 +147,6 @@ def convert_time_to_seconds(Timestamp):
 
 
 def convert_datafile_to_relative_time(TortDF,ppt_start_time,datacolumn = "Tortuosity"):
-    print(convert_time_to_seconds(ppt_start_time))
     offsettime = convert_time_to_seconds(ppt_start_time)
     timestamps = TortDF["Timestamp"]
     torttimes = []
@@ -117,6 +174,9 @@ fs = int(1 / (times[100] - times[99]))
 cutoff = 2  # cutoff frequency in Hz
 FLOWcounter = np.concatenate([[0], np.cumsum(np.abs(np.diff(np.sign(FLOWdata - 2.5))) > 1)])[1::nrate]
 flowvolume = FLOWcounter * 3.87 * 10**(-7)
+
+
+
 flowrate = np.gradient(flowvolume) * fs
 PPT1 = PPT1 * 608.5052 - 4.2710
 PPT2 = PPT2 *613.0834 - 4.99827
@@ -125,14 +185,14 @@ PPT3 = PPT3 * 611.7754 - 3.2881
 #opening tortuosity folder
 TortDF = pd.read_csv(tortuosity12file)
 Tort23DF = pd.read_csv(tortuosity23file)
-Tort13DF = pd.read_csv(tortuosity13file)
+#Tort13DF = pd.read_csv(tortuosity13file)
 void12DF = pd.read_csv(voidratio12file)
 void23DF = pd.read_csv(voidratio23file)
 void13DF = pd.read_csv(voidratio13file)
 
 tort12times, Tortuosity12 = convert_datafile_to_relative_time(TortDF,ppt_start_time,"Tortuosity")
 tort12times, Tortuosity23 = convert_datafile_to_relative_time(Tort23DF,ppt_start_time,"Tortuosity")
-tort12times, Tortuosity13 = convert_datafile_to_relative_time(Tort13DF,ppt_start_time,"Tortuosity")
+#tort12times, Tortuosity13 = convert_datafile_to_relative_time(Tort13DF,ppt_start_time,"Tortuosity")
 void12times, VoidRatio12 = convert_datafile_to_relative_time(void12DF,ppt_start_time,"VoidRatio")
 void23times, VoidRatio23 = convert_datafile_to_relative_time(void23DF,ppt_start_time,"VoidRatio")
 void13times, VoidRatio13 = convert_datafile_to_relative_time(void13DF,ppt_start_time,"VoidRatio")
@@ -159,8 +219,10 @@ flowrateraw = np.array(flowrate)
 
 
 #adjusting PPT data to get the change in pressure rather than considering total pressure as Darcy's law ignores the head difference ( so for static h = 0 at both)
-noflowtimes = [0,10]
+noflowtimes = [0,18]
 plotendtime = times[-1] - 10
+
+
 
 
 timelist = times.tolist()
@@ -174,8 +236,9 @@ PPT1adjusted = (PPT1 - PPT1base) * 1000
 PPT2adjusted = (PPT2 - PPT2base) * 1000
 PPT3adjusted = (PPT3 - PPT3base) * 1000
 
-
-
+PPT1adjusted = plottingfunctions.replacewithconstants(PPT1adjusted,timelist,cleanuptimes)
+PPT2adjusted = plottingfunctions.replacewithconstants(PPT2adjusted,timelist,cleanuptimes)
+PPT3adjusted = plottingfunctions.replacewithconstants(PPT3adjusted,timelist,cleanuptimes)
 
 
 #plotting of PPTs
@@ -217,7 +280,16 @@ ax3.plot(times, smooth_data(hgradient23,1000),label = 'PPT2 - PPT3' )
 ax3.plot(times, smooth_data(hgradient13,1000),label = 'PPT1 - PPT3' )
 
 icrit = 1.1113
-ax3.plot([0,times[len(times)-1]],[icrit,icrit],color = 'red',linestyle = '--')
+
+#calcualting critical hydraulic gradient
+Gs = 2.5 #This is from the particle design, it's slightly less and varies for each but close enough
+icrit12 = (Gs-1) / (1 + np.mean(VoidRatio12[0:30]))
+icrit23 = (Gs-1) / (1 + np.mean(VoidRatio23[0:30]))
+icrit13 = (Gs-1) / (1 + np.mean(VoidRatio13[0:30]))
+
+ax3.plot([0,times[len(times)-1]],[icrit12,icrit12],linestyle = '--',color = 'tab:blue', label = r'$i_{cr}$ PPT1-PPT2')
+ax3.plot([0,times[len(times)-1]],[icrit23,icrit23],linestyle = '--',color = 'tab:orange', label = r'$i_{cr}$ PPT2-PPT3')
+ax3.plot([0,times[len(times)-1]],[icrit13,icrit13],linestyle = '--',color = 'tab:green', label = r'$i_{cr}$ PPT1-PPT3')
 
 ax3.set_xlabel('Time (s)')
 ax3.set_ylabel('Hydraulic Gradient')
@@ -265,7 +337,7 @@ ax5.grid(True)
 
 ax6.plot(tort12times,Tortuosity12,label = "PPT1 - PPT2")
 ax6.plot(tort12times,Tortuosity23,label = "PPT2 - PPT3")
-ax6.plot(tort12times,Tortuosity13,label = "PPT1 - PPT3")
+#ax6.plot(tort12times,Tortuosity13,label = "PPT1 - PPT3")
 ax6.set_xlim(0,plotendtime) 
 ax6.set_xlabel('Time (s)')
 ax6.set_ylabel('Tortuosity')
@@ -276,6 +348,7 @@ ax6.legend()
 plt.tight_layout()
 plt.show()
 
+fig, (ax1,ax2,ax3 ) = plt.subplots(3,1)
 
 
 
@@ -299,29 +372,40 @@ for t in tort12times:
 
 Tort12 = np.array(Tortuosity12.copy())
 Tort23 = np.array(Tortuosity23.copy())
-Tort13 = np.array(Tortuosity13.copy())
+#Tort13 = np.array(Tortuosity13.copy())
 e12 = VoidRatio12.copy()
 e23 = VoidRatio23.copy()
 e13 = VoidRatio13.copy()
 
 permcalc12 = 1/(Tort12 **2) * ( e12/ (1+e12))**3
 permcalc23 = 1/(Tort23 **2 ) * (e23 / (1+e23)) **3
-permcalc13 = 1/(Tort13 **2 ) * (e13 / (1+e13)) **3
+#permcalc13 = 1/(Tort13 **2 ) * (e13 / (1+e13)) **3
 
-permcalc12_100 = permcalc12[100]
-permcalc23_100 = permcalc23[100]
-permcalc13_100 = permcalc13[100]
+permcalc12_100 = np.mean(permcalc12[150:160])
+permcalc23_100 = np.mean(permcalc23[150:160])
+#permcalc13_100 = permcalc13[100]
 
-permeability12_100 = permeabilitylist12[100]
-permeability23_100 = permeabilitylist23[100]
-permeability13_100 = permeabilitylist13[100]
+permeability12_100 = np.mean(permeabilitylist12[150:160])
+permeability23_100 = np.mean(permeabilitylist23[150:160])
+permeability13_100 = np.mean(permeabilitylist13[150:160])
+fig,ax1 = plt.subplots(figsize = (8,8))
 
-plt.scatter(permcalc12[50:-50]/permcalc12_100,permeabilitylist12[50:-50]/permeability12_100,label = "Between PPT1 and PPT2")
-plt.scatter(permcalc23[50:-50] / permcalc23_100,permeabilitylist23[50:-50]/permeability23_100,label = "Between PPT2 and PPT3")
-plt.scatter(permcalc13[50:-50] / permcalc13_100,permeabilitylist13[50:-50]/permeability13_100,label = "Between PPT1 and PPT3")
+ax1.scatter(permcalc12[160:450]/permcalc12_100,permeabilitylist12[160:450]/permeability12_100,label = "Between PPT1 and PPT2")
+ax1.scatter(permcalc23[160:450] / permcalc23_100,permeabilitylist23[160:450]/permeability23_100,label = "Between PPT2 and PPT3")
+#ax1.scatter(permcalc13[50:200] / permcalc13_100,permeabilitylist13[50:200]/permeability13_100,label = "Between PPT1 and PPT3")
 
-plt.xlabel(r'$\frac{\frac{1}{\tau^2} (\frac{e}{1+e})^3}{\tau_0}$')
-plt.ylabel(r'Permeability $\frac{k}{k_0}$')
+#ax1.set_xlabel(r'$\frac{\frac{1}{\tau^2} (\frac{e}{1+e})^3}{\tau_0}$')
+
+ax1.set_xlabel(r'Permeability calculated using Kozeny-Carman equation $\frac{k_{Carmen}}{k_{Carmen,0}}$',fontsize = 'large')
+ax1.set_ylabel(r'Measured Permeability $\frac{k}{k_0}$',fontsize = 'large')
+
+plt.title(r'Apr16/Test1  Mixture Particles t= 320 $\rightarrow$ t = 1000',fontsize = 'large')
+ax1.set_xlim(0.8,2.5)
+ax1.set_ylim(0.8,2.5)
+
+ax1.plot([0.8,3],[0.8,3],linestyle = '--',color = 'red')
+
+
 
 plt.grid()
 plt.legend()

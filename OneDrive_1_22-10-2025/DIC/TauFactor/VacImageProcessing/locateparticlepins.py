@@ -41,7 +41,7 @@ def find_continuity_shape(imarray,seedpoint,value=1):
     return locations
 
 
-def find_pins(imarray,pinsize = [1000,2000],value=1):
+def find_pins(imarray,pinsize = [1000,2000],value=1,returnpinsizes = False):
     #This function has 2 parts, identifying the size and position of pins, and converting them to a vector form 
 
     particleindex = 0
@@ -75,6 +75,7 @@ def find_pins(imarray,pinsize = [1000,2000],value=1):
     numberofpins = 0
 
     for currentpin in range(maxparticleindex):
+        
         if pinsize[0] < particlesizes[currentpin] < pinsize[1]:
             ycoords,xcoords = [],[]
             for pixely,pixelx in particlepoints[currentpin]:
@@ -85,7 +86,9 @@ def find_pins(imarray,pinsize = [1000,2000],value=1):
             numberofpins += 1
             totalarea += particlesizes[currentpin]
     averagearea = totalarea / numberofpins
-            
+    if returnpinsizes:
+        return pincentres,averagearea,particlesizes
+
     return pincentres, averagearea
 
 def create_shapes_from_pins(pincentres,averagearea,contains_circles,contains_Elipses):

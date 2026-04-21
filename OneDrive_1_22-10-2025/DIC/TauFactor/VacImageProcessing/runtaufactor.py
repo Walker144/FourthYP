@@ -25,7 +25,13 @@ def run_tau_factor(slices,fx=0.5,fy=0.5):
     img_bin = np.transpose(img_bin, (1, 2, 0))
     #print("Stack shape:", img_bin.shape)
 
-    solver = tau.AnisotropicSolver(img_bin, (75, 75, 192))
+    #note assumes full width of permeameter 200mm
+    
+    imgwidth = img_bin.shape[1]
+    spacing = (150*fx,150*fy,192)    
+
+
+    solver = tau.AnisotropicSolver(img_bin, spacing)
     solver.solve(iter_limit = 50000,verbose=False)
     #print("tau:", solver.tau)
     #print("D_eff:", solver.D_eff)
