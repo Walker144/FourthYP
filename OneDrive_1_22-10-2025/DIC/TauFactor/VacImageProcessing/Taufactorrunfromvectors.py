@@ -11,15 +11,7 @@ import runtaufactor
 
 
 
-vectorfolder = "H:\Apr01\Test4\ImageVectors"
-imagedatafile = "H:\Apr01\Test4\Test\Image.csv"
-outputfile = "H:\Apr01\Test4\Tortuosity12Right.csv"
 
-XrangeWanted = [1200,10000]
-YrangeWanted = [1870,10000]
-
-#Mar27Test1 PPT2 location 500
-#Apr1Test3 PP2 location 1870
 
 def draw_taufactor_layer(Alist,Blist,AngleList,CentreX,CentreY,size ,ScaleFactor= [1,1]):
     taulayer = np.zeros(shape =size)
@@ -64,9 +56,9 @@ def loading_bar(percent, width=30,texttoshow=""):
 
 
 
-
-if __name__ == "__main__":
+def run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst = True):
     vectorfilelist = os.listdir(vectorfolder)
+    first = isfirst
     imagedatasheet = open(imagedatafile).read().split('\n')[1::]
 
     if os.path.exists(outputfile):
@@ -78,7 +70,7 @@ if __name__ == "__main__":
     
 
 
-    first = True
+    
     imagecount = 0
     for vectorset in vectorfilelist:
         
@@ -119,14 +111,67 @@ if __name__ == "__main__":
 
 
 
-        Tortuosity, Deff = runtaufactor.run_tau_factor(taufactorlayers,fx=.25,fy=.25)
+        Tortuosity, Deff = runtaufactor.run_tau_factor(taufactorlayers)
         tortdata.loc[len(tortdata)] = ["Image_" +  imagenum,Tortuosity[0],Deff[0],imagetimestamp]
         tortdata.to_csv(outputfile)
 
         loading_bar(imagecount / len(vectorfilelist) * 100, texttoshow= f' Current image {imagenum} Tortuosity {Tortuosity}')
         
 
-        
+
+
+
+vectorfolder = "I:\Apr16\Test2\ImageVectors"
+imagedatafile = "I:\Apr16\Test2\Test\Image.csv"
+outputfile = "I:\Apr16\Test2\Tortuosity12.csv"
+
+XrangeWanted = [0,10000]
+YrangeWanted = [1929,10000]
+#apr1Test 6 450, 2344
+#Mar27Test1 PPT2 location 500
+#Apr1Test3 PP2 location 1870
+
+if __name__ == "__main__":
+    outputfile = "I:\Apr16\Test2\Tortuosity23.csv"
+    YrangeWanted = [0,1929]
+    run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted)
+
+    outputfile = "I:\Apr16\Test2\Tortuosity12.csv"
+    YrangeWanted = [1929,10000]
+    run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst=False)
+
+
+
+    vectorfolder = "I:\Apr16\Test3\ImageVectors"
+    imagedatafile = "I:\Apr16\Test3\Test\Image.csv"
+    outputfile = "I:\Apr16\Test3\Tortuosity23.csv"
+    YrangeWanted = [0,1929]
+    run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst=False)
+
+    outputfile = "I:\Apr16\Test3\Tortuosity12.csv"
+    YrangeWanted = [1929,10000]
+    run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst=False)
+
+
+
+
+    outputfile = "I:\Apr16\Test3\Tortuosity13.csv"
+    YrangeWanted = [0,10000]
+    run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst=False)
+
+    vectorfolder = "I:\Apr16\Test2\ImageVectors"
+    imagedatafile = "I:\Apr16\Test2\Test\Image.csv"
+
+    outputfile = "I:\Apr16\Test2\Tortuosity13.csv"
+    YrangeWanted = [0,10000]
+    run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst=False)
+
+    '''#update to ppt1 to ppt3
+
+    outputfile = "I:\Apr01\Test5\Tortuosity13.csv"
+    YrangeWanted = [330,10000]
+    run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst=False)'''
+
 
 
 
