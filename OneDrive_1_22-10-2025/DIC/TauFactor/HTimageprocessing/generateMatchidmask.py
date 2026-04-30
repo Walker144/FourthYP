@@ -13,7 +13,7 @@ import createTaufactorlayersellipse
 
 cutoff = 70
 #Crop Left top right bottom
-croplist = [.35,.1,.88,.97]
+croplist = [.24,.37,.62,.88]
 
 '''imagecsvpath = "OneDrive_1_22-10-2025\DIC\TauFactor\HTimageprocessing\Image_0000_0.tiff"
 imagefile = open(imagecsvpath,'r').read().split('\n')
@@ -26,7 +26,7 @@ im[0] = filepath + part
 file = im[0]
 print(im[0])'''
 
-file = "I:\Image_0000_0.tiff"
+file = "H:\Image_0000_0.tiff"
 newimageprep.plot_hisogram(file)
 im = newimageprep.binarise_image(file,cutoff,croplist)
 newimageprep.display_image(im)
@@ -51,7 +51,7 @@ L = np.array(matdata["L"])
 
 
 print(Areas)
-slices,dataexport = createTaufactorlayersellipse.create_taufactor_arrays(imagesize,Centersv,Centersu,Areas,Contactlist,L,True)
+slices,dataexport = createTaufactorlayersellipse.create_taufactor_arrays(imagesize,Centersv,Centersu,Areas,Contactlist,L,True,sizecutoff=[10,6000])
 print(dataexport)
 dataexport.to_csv("OneDrive_1_22-10-2025\DIC\TauFactor\HTimageprocessing\MatchIDanalysis\InitalElipses.csv")
 
@@ -81,8 +81,8 @@ rawimage_array = np.array(rawimage)
 Image.fromarray(fullmask.astype(np.uint8)).save("OneDrive_1_22-10-2025\DIC\TauFactor\HTimageprocessing\Fullmask.tif")
 
 # Show image with mask overlay
-plt.imshow(rawimage_array)
-plt.imshow(fullmask, alpha=0.5, cmap='Reds')
+plt.imshow(np.array(Image.open(file)), cmap='gray')
+plt.imshow(fullmask, alpha=0.3)
 
 
 plt.tight_layout()

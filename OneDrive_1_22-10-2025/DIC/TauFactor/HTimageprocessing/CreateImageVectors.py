@@ -59,8 +59,10 @@ vectorfolder = "H:\Mar27\Test1\ImageVectors"'''
 '''imagefolder = "H:\Mar27\Test3\Test"
 vectorfolder = "H:\Mar27\Test3\ImageVectors"'''
 
-imagefolder = "H:\Mar31\Test1\Test"
-vectorfolder = "H:\Mar31\Test1\ImageVectors"
+imagefolder = "I:\Mar31\Test1\Test"
+vectorfolder = "I:\Mar31\Test1\ImageVectors"
+
+
 
 imagecsvpath =  imagefolder + "\\Image.csv"
 
@@ -76,6 +78,7 @@ Deff = []
 particlecounts = []
 tauout = ''
 first = True
+
 for im in imagefile[1::4]:
     im = im.split(';')
     timestamps.append(im[1])

@@ -7,7 +7,7 @@ import os
 import cv2
 
 #multiplier for distance between particles for contact
-DISTANCETHEASHOLD = 1.1
+DISTANCETHEASHOLD = 1.15
 
 
 def give_ellipse_point(a,b,Angle,h,k,t):
@@ -199,7 +199,6 @@ def runsetofcoords(imagevectorfolder,imagedatafile,outputfile,yrange,first= True
 
 
 
-            print(contactdic)
             fig, (ax1,ax2) = plt.subplots(1,2)
             cmap = plt.get_cmap("viridis", 7)
             bounds = [0, 1, 2, 3, 4, 5, 6, 7]
@@ -223,23 +222,23 @@ def runsetofcoords(imagevectorfolder,imagedatafile,outputfile,yrange,first= True
        
 
 if __name__ == "__main__":
-    imagevectorfolder = "I:\Mar27\Test3\ImageVectors"
-    imagedatafile = "I:\Mar27\Test3\Test\Image.csv"
+    imagevectorfolder = "I:\Mar27\Test1\ImageVectors"
+    imagedatafile = "I:\Mar27\Test1\Test\Image.csv"
 
 
-    outputfile = "I:\Mar27\Test3\CoordinationNumbers23.csv"
-    yrange = [750,2400]
+    outputfile = "I:\Mar27\Test1\CoordinationNumbers23.csv"
+    yrange = [600,2300]
     runsetofcoords(imagevectorfolder,imagedatafile,outputfile,yrange,True)
 
 
 
 
-    outputfile = "I:\Mar27\Test3\CoordinationNumbers13.csv"
-    yrange = [750,10000]
+    outputfile = "I:\Mar27\Test1\CoordinationNumbers13.csv"
+    yrange = [600,10000]
     runsetofcoords(imagevectorfolder,imagedatafile,outputfile,yrange,False)
 
-    outputfile = "I:\Mar27\Test3\CoordinationNumbers12.csv"
-    yrange = [2400,10000]
+    outputfile = "I:\Mar27\Test1\CoordinationNumbers12.csv"
+    yrange = [2300,10000]
     runsetofcoords(imagevectorfolder,imagedatafile,outputfile,yrange,False)
 
 

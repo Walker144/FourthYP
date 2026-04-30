@@ -121,9 +121,9 @@ def run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted
 
 
 
-vectorfolder = "I:\Apr16\Test2\ImageVectors"
-imagedatafile = "I:\Apr16\Test2\Test\Image.csv"
-outputfile = "I:\Apr16\Test2\Tortuosity12.csv"
+vectorfolder = "I:\Mar31\Test1\ImageVectors"
+imagedatafile = "I:\Mar31\Test1\Test\Image.csv"
+outputfile = "I:\Mar31\Test1\Tortuosity12.csv"
 
 XrangeWanted = [0,10000]
 YrangeWanted = [1929,10000]
@@ -132,45 +132,19 @@ YrangeWanted = [1929,10000]
 #Apr1Test3 PP2 location 1870
 
 if __name__ == "__main__":
-    outputfile = "I:\Apr16\Test2\Tortuosity23.csv"
-    YrangeWanted = [0,1929]
+    outputfile = "I:\Mar31\Test1\Tortuosity23.csv"
+    YrangeWanted = [770,2550]
     run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted)
 
-    outputfile = "I:\Apr16\Test2\Tortuosity12.csv"
-    YrangeWanted = [1929,10000]
+    outputfile = "I:\Mar31\Test1\Tortuosity12.csv"
+    YrangeWanted = [2550,10000]
     run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst=False)
 
+    outputfile = "I:\Mar31\Test1\Tortuosity13.csv"
+    YrangeWanted = [770,10000]
+    run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst= False)
 
 
-    vectorfolder = "I:\Apr16\Test3\ImageVectors"
-    imagedatafile = "I:\Apr16\Test3\Test\Image.csv"
-    outputfile = "I:\Apr16\Test3\Tortuosity23.csv"
-    YrangeWanted = [0,1929]
-    run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst=False)
-
-    outputfile = "I:\Apr16\Test3\Tortuosity12.csv"
-    YrangeWanted = [1929,10000]
-    run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst=False)
-
-
-
-
-    outputfile = "I:\Apr16\Test3\Tortuosity13.csv"
-    YrangeWanted = [0,10000]
-    run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst=False)
-
-    vectorfolder = "I:\Apr16\Test2\ImageVectors"
-    imagedatafile = "I:\Apr16\Test2\Test\Image.csv"
-
-    outputfile = "I:\Apr16\Test2\Tortuosity13.csv"
-    YrangeWanted = [0,10000]
-    run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst=False)
-
-    '''#update to ppt1 to ppt3
-
-    outputfile = "I:\Apr01\Test5\Tortuosity13.csv"
-    YrangeWanted = [330,10000]
-    run_file_set(vectorfolder,imagedatafile,outputfile,XrangeWanted,YrangeWanted,isfirst=False)'''
 
 
 

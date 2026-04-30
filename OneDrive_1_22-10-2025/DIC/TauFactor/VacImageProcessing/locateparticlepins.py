@@ -67,14 +67,16 @@ def find_pins(imarray,pinsize = [1000,2000],value=1,returnpinsizes = False):
             placestocheck[r,c] = False
     
     #converting pins to vectors
-
+    #This makes it the last particle that has an index in the list
     maxparticleindex = particleindex - 1
 
     pincentres = []
     totalarea = 0
     numberofpins = 0
 
-    for currentpin in range(maxparticleindex):
+    
+
+    for currentpin in range(maxparticleindex+1):
         
         if pinsize[0] < particlesizes[currentpin] < pinsize[1]:
             ycoords,xcoords = [],[]
@@ -85,6 +87,14 @@ def find_pins(imarray,pinsize = [1000,2000],value=1,returnpinsizes = False):
             pincentres.append([ycentre,xcentre])
             numberofpins += 1
             totalarea += particlesizes[currentpin]
+        
+    if numberofpins == 0:
+        if returnpinsizes:
+            return [],0,[]
+        else:
+            return [],0
+        
+
     averagearea = totalarea / numberofpins
     if returnpinsizes:
         return pincentres,averagearea,particlesizes
@@ -130,8 +140,10 @@ def create_shapes_from_pins(pincentres,averagearea,contains_circles,contains_Eli
                 distances.append(distance)
 
             sorteddistances = sorted(distances)
-
-            mindistance = sorteddistances[1]
+            if len(sorteddistances) > 1:
+                mindistance = sorteddistances[1]
+            else:
+                mindistance = 1000000000000
 
             if mindistance < ellipsepindistance*1.2:
 

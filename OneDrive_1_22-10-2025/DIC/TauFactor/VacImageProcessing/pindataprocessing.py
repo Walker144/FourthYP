@@ -15,7 +15,12 @@ import os
 os.system("")
 cutoff = 50
 
+#############################
+#####   Main Crop Info  #####
+#############################
+
 #Apr1 Test 1
+
 cropsizes = [1474,360,3950,4875]
 
 #Apr1 Test 2,3,4
@@ -33,8 +38,20 @@ cropsizes = [1860,933,4300,4730]
 #Apr16 Test 1
 cropsizes = [1720,733,4200,4730]
 
-imagefile = "I:\Apr16\Test3\Test\Image.csv"
-vectorfolder = "I:\Apr16\Test3\ImageVectors\\"
+
+#####################################
+#####       TOP CROP INFO       #####
+#####################################
+
+#Apr16 Test 1
+cropsizes = [1720,350,4200,733]
+
+
+
+
+
+imagefile = "I:\Apr16\Test1\Test\Image.csv"
+vectorfolder = "I:\Apr16\Test1\TopImageVectors\\"
 
 def filterimage(imarray,cutoff):
     filterimarray = imarray
@@ -104,9 +121,13 @@ if __name__ == "__main__":
             ax3.imshow(filteredimage,cmap = 'grey')
             plt.show()
         pincentres,averagearea = locateparticlepins.find_pins(filteredimage)
-        pinradiuspx = (averagearea / np.pi)**.5
+        
 
-        Alist,Blist,AngleList,CentreX,CentreY = locateparticlepins.create_shapes_from_pins(pincentres,averagearea,False,True)
+        pinradiuspx = (averagearea / np.pi)**.5
+        if averagearea == 0:
+            Alist,Blist,AngleList,CentreX,CentreY  = [],[],[],[],[]
+        else:
+            Alist,Blist,AngleList,CentreX,CentreY = locateparticlepins.create_shapes_from_pins(pincentres,averagearea,False,True)
         dfexport = pd.DataFrame({"Alist":Alist,"Blist":Blist,"AngleList":AngleList,"CentreX":CentreX,"CentreY":CentreY})
         dfexport.to_csv(vectorfolder + imagename + '.csv')
 

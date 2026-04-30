@@ -5,8 +5,13 @@ import matplotlib.pyplot as plt
 import h5py
 import pandas as pd
 
-#filename = "I:\Apr16\Test1\TestCombineddata.csv"
-filename = "I:\Apr01\Test3\TestCombineddata.csv"
+filename = "I:\Apr16\Test1\TestCombineddata.csv" # mixed
+#filename = "I:\Apr01\Test3\TestCombineddata.csv" # elliptical
+#filename = "I:\Mar27\Test3\TestCombineddata.csv" #Circular
+#filename = "I:\Mar27\Test1\TestCombineddata.csv" #Circular Dense
+
+#filename = "I:\Mar31\Test1\TestCombineddata.csv" #Circular New
+#
 
 
 def smooth_data(data, window_size):

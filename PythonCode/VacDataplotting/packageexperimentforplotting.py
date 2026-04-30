@@ -129,4 +129,4 @@ def package_experimentset_to_csv(folder,cutoff,DataOutRate,matstarttime):
 
 
 if __name__ == "__main__":
-    package_experimentset_to_csv("I:\Mar27\Test3",2,100,"12:28:49")
+    package_experimentset_to_csv("I:\Mar27\Test1",2,100,"11:28:41")
