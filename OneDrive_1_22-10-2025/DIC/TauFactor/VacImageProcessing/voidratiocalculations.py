@@ -96,13 +96,13 @@ def void_ratio_run(vectorfolder,imagedatafile,outputfile,XrangeWanted,Yrangewant
 
 
 if __name__ == "__main__":
-    vectorfolder = "I:\Mar31\Test1\ImageVectors"
-    imagedatafile = "I:\Mar31\Test1\Test\Image.csv"
+    vectorfolder = "I:\Apr16\Test1\ImageVectors"
+    imagedatafile = "I:\Apr01\Test3\Test\Image.csv"
     
 
-    outputfile = "I:\Mar31\Test1\VoidRatio13.csv"
+    outputfile = "I:\Apr01\Test3\VoidRatio13ddd.csv"
     XrangeWanted = [0,10000]
-    YrangeWanted = [770,10000]
+    YrangeWanted = [0,10000]
     #test 2,3,4 y split is 1870
     #mar27 test 1, y 650, 2300
     #mar27 Test 3 y 750,2400

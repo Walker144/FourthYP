@@ -7,7 +7,7 @@ import os
 import cv2
 
 #multiplier for distance between particles for contact
-DISTANCETHEASHOLD = 2
+DISTANCETHEASHOLD = 1.5
 
 
 def give_ellipse_point(a,b,Angle,h,k,t):
@@ -53,7 +53,7 @@ def calculate_contacts(vectorfilepath,DISTANCETHREASHOLD,yrange = [0,10000]):
     else:
         pixelpermm = Alist[0] / 14
 
-    centretheathhold = pixelpermm * 14 * 2
+    centretheathhold = pixelpermm * 14 * 3
 
     for p1 in range(numberofparticles):
         for p2 in range(numberofparticles):
@@ -85,13 +85,6 @@ def calculate_contacts(vectorfilepath,DISTANCETHREASHOLD,yrange = [0,10000]):
                         contactlist[p1].append(p2)
                         contactlist[p2].append(p1)
                         contactfound = True
-    
-    for p in range(numberofparticles):
-        if CentreY[p] > yrange[1] or CentreY[p] < yrange[0]:
-            #outside the desired area
-            for p2 in contactlist[p]:
-                contactlist[p2].remove(p)
-            del contactlist[p]
             
     return contactlist
     
@@ -133,13 +126,26 @@ def loading_bar(percent, width=30,texttoshow=""):
         print()
 
 
+def filtercontacts(vectorfilepath,yrange,contactdic):
+    imagedata = pd.read_csv(vectorfilepath)
+    Alist,Blist,AngleList,CentreX,CentreY = np.array(imagedata["Alist"]),np.array(imagedata["Blist"]),np.array(imagedata["AngleList"]),np.array(imagedata["CentreX"]),np.array(imagedata["CentreY"])
+    
+    numberofparticles = len(Alist)
+
+    for i in range(len(CentreY)):
+        if CentreY[i] < yrange[0] or CentreY[i] > yrange[1]:
+            #this only removes the particle, not the contacts aswell. The rationale for this is that at the boundary the particle still has the contacts
+            del contactdic[i]
+    
+
+    return contactdic
+    
 
 
 
 
 
-
-def runsetofcoords(imagevectorfolder,imagedatafile,outputfile,yrange,first= True):
+def runsetofcoords(imagevectorfolder,imagedatafile,outputfile,pptlocations,first= True):
     vectorfilelist = os.listdir(imagevectorfolder)
 
 
@@ -151,10 +157,17 @@ def runsetofcoords(imagevectorfolder,imagedatafile,outputfile,yrange,first= True
 
     if os.path.exists(outputfile):
         coordinationdataold = pd.read_csv(outputfile)
-        coordinationdata = pd.DataFrame({"Imagename":coordinationdataold["Imagename"],"CoordinationNumber":coordinationdataold["CoordinationNumber"],"MechanicalCoordination":coordinationdataold["MechanicalCoordination"],"Timestamp":coordinationdataold["Timestamp"]})
+        coordinationdata = pd.DataFrame({"Imagename":coordinationdataold["Imagename"],
+                                         "CoordinationNumber12":coordinationdataold["CoordinationNumber12"]
+                                         ,"MechanicalCoordination12":coordinationdataold["MechanicalCoordination12"]
+                                         ,"Timestamp":coordinationdataold["Timestamp"]
+                                         ,"CoordinationNumber23":coordinationdataold["CoordinationNumber23"]
+                                         ,"MechanicalCoordination23":coordinationdataold["MechanicalCoordination23"]
+                                         ,"CoordinationNumber13":coordinationdataold["CoordinationNumber13"]
+                                         ,"MechanicalCoordination13":coordinationdataold["MechanicalCoordination13"]})
         print("Existing File located")
     else:
-        coordinationdata = pd.DataFrame(columns=["Imagename","CoordinationNumber","MechanicalCoordination","Timestamp"])
+        coordinationdata = pd.DataFrame(columns=["Imagename","CoordinationNumber12","MechanicalCoordination12","Timestamp","CoordinationNumber23","MechanicalCoordination23","CoordinationNumber13","MechanicalCoordination13"])
 
 
     for vectorfile in vectorfilelist:
@@ -177,17 +190,32 @@ def runsetofcoords(imagevectorfolder,imagedatafile,outputfile,yrange,first= True
 
         vectorfilepath = imagevectorfolder + "\\" + vectorfile
 
-        contactdic = calculate_contacts(vectorfilepath,DISTANCETHEASHOLD,yrange=yrange)
+        contactdic = calculate_contacts(vectorfilepath,DISTANCETHEASHOLD)
         numberofparticles = len(list(contactdic.keys()))
 
-
-
-        coordinationnumber, mechanicalcoordination, = calculate_coordination_number(contactdic,numberofparticles),calculate_mechanical_coordination_number(contactdic,numberofparticles)
+        #wholeimage
+        contactdicwhole = filtercontacts( vectorfilepath,[pptlocations[0],pptlocations[2]],contactdic.copy())
         
-        coordinationdata.loc[len(coordinationdata)] = ["Image_" +  imagenum,coordinationnumber,mechanicalcoordination,imagetimestamp]
+        coordinationnumberwhole, mechanicalcoordinationwhole = calculate_coordination_number(contactdicwhole,len(list(contactdicwhole.keys()))),calculate_mechanical_coordination_number(contactdicwhole,len(list(contactdicwhole.keys())))
+        #top half
+        contactdictop = filtercontacts( vectorfilepath,[pptlocations[0],pptlocations[1]],contactdic.copy())
+
+        coordinationnumbertop, mechanicalcoordinationtop = calculate_coordination_number(contactdictop,len(list(contactdictop.keys()))),calculate_mechanical_coordination_number(contactdictop,len(list(contactdictop.keys())))
+        
+        #bottom half
+        contactdicbot = filtercontacts( vectorfilepath,[pptlocations[1],pptlocations[2]],contactdic.copy())
+
+        coordinationnumberbottom, mechanicalcoordinationbottom = calculate_coordination_number(contactdicbot,len(list(contactdicbot.keys()))),calculate_mechanical_coordination_number(contactdicbot,len(list(contactdicbot.keys())))
+        
+        rowtowrite = ["Image_" +  imagenum,coordinationnumberbottom,mechanicalcoordinationbottom,
+                                                       imagetimestamp,coordinationnumbertop,mechanicalcoordinationtop,coordinationnumberwhole,mechanicalcoordinationwhole]
+
+
+        
+        coordinationdata.loc[len(coordinationdata)] = rowtowrite
         coordinationdata.to_csv(outputfile)
 
-        loading_bar(len(coordinationdata) / len(vectorfilelist)*100,30,f'{len(coordinationdata)} Coordination: {coordinationnumber} Mechanical coordination: {mechanicalcoordination}')
+        loading_bar(len(coordinationdata) / len(vectorfilelist)*100,30,f'{len(coordinationdata)} Coordination: {coordinationnumbertop} Mechanical coordination: {mechanicalcoordinationtop}')
 
 
         if first:
@@ -226,20 +254,39 @@ if __name__ == "__main__":
     imagedatafile = "I:\Apr16\Test1\Test\Image.csv"
 
 
-    outputfile = "I:\Apr16\Test1\CoordinationNumbers23.csv"
+    outputfile = "I:\Apr16\Test1\CloseParticledistances.csv"
     yrange = [600,2300]
-    runsetofcoords(imagevectorfolder,imagedatafile,outputfile,yrange,True)
+    runsetofcoords(imagevectorfolder,imagedatafile,outputfile,[250,2000,10000],True)
 
 
 
+    imagevectorfolder = "I:\Mar27\Test1\ImageVectors"
+    imagedatafile = "I:\Mar27\Test1\Test\Image.csv"
+    outputfile = "I:\Mar27\Test1\CloseParticledistances.csv"
 
-    outputfile = "I:\Apr16\Test1\CoordinationNumbers13.csv"
-    yrange = [600,10000]
-    runsetofcoords(imagevectorfolder,imagedatafile,outputfile,yrange,False)
+    runsetofcoords(imagevectorfolder,imagedatafile,outputfile,[650,2300,10000],False)
 
-    outputfile = "I:\Apr16\Test1\CoordinationNumbers12.csv"
-    yrange = [2300,10000]
-    runsetofcoords(imagevectorfolder,imagedatafile,outputfile,yrange,False)
+
+    imagevectorfolder = "I:\Mar31\Test1\ImageVectors"
+    imagedatafile = "I:\Mar31\Test1\Test\Image.csv"
+    outputfile = "I:\Mar31\Test1\CloseParticledistances.csv"
+
+    runsetofcoords(imagevectorfolder,imagedatafile,outputfile,[750,2550,10000],False)
+
+    imagevectorfolder = "I:\Apr01\Test3\ImageVectors"
+    imagedatafile = "I:\Apr01\Test3\Test\Image.csv"
+    outputfile = "I:\Apr01\Test3\CloseParticledistances.csv"
+
+    runsetofcoords(imagevectorfolder,imagedatafile,outputfile,[0,1900,10000],False)
+
+    imagevectorfolder = "I:\Apr16\Test1\ImageVectors"
+    imagedatafile = "I:\Apr16\Test1\Test\Image.csv"
+    outputfile = "I:\Apr16\Test1\CloseParticledistances.csv"
+
+    runsetofcoords(imagevectorfolder,imagedatafile,outputfile,[230,2000,10000],False)
+
+
+
 
 
 

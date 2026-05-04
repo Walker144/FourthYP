@@ -59,7 +59,7 @@ ax3.set_ylabel(r"$\frac{k}{k_{ref}}$ ")
 
 ru12 = h12 / hydraulicgradientcrit12
 ru23 = h23 / hydraulicgradientcrit23
-ru13 = h13 / hydraulicgradientcrit12
+ru13 = h13 / hydraulicgradientcrit13
 
 ax4.plot(datafile["time"][timerange[0]*100:timerange[1]*100:100],ru12[timerange[0]*100:timerange[1]*100:100])
 ax4.plot(datafile["time"][timerange[0]*100:timerange[1]*100:100],ru23[timerange[0]*100:timerange[1]*100:100])

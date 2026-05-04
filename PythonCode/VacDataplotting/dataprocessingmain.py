@@ -28,15 +28,16 @@ cleanuptimes = [[0,13],[13,63],[950,992],[992,1008]]
 
 
 
-#Apr01 Test 6
-'''f  = "I:\Apr01\Test6\Apr01Test6.mat"
+'''#Apr01 Test 6
+f  = "I:\Apr01\Test6\Apr01Test6.mat"
 tortuosity12file = "I:\Apr01\Test6\Tortuosity12.csv"
 tortuosity23file = "I:\Apr01\Test6\Tortuosity23.csv"
 #tortuosity13file = "I:\Apr01\Test6\Tortuosity13.csv"
 voidratio12file = "I:\Apr01\Test6\VoidRatio12.csv"
 voidratio23file = "I:\Apr01\Test6\VoidRatio23.csv"
 voidratio13file = "I:\Apr01\Test6\VoidRatio13.csv"
-ppt_start_time = "17:11:28"'''
+ppt_start_time = "17:11:28"
+cleanuptimes = [[0,13],[13,63],[950,992],[992,1008]]'''
 
 '''f  = "I:\Apr01\Test5\Apr01Test5.mat"
 tortuosity12file = "I:\Apr01\Test5\Tortuosity12.csv"
@@ -92,7 +93,7 @@ ppt_start_time = "11:44:29"'''
 
 
 #Apr16 Test 1
-f  = "I:\Apr16\Test1\Apr16Test1.mat"
+'''f  = "I:\Apr16\Test1\Apr16Test1.mat"
 tortuosity12file = "I:\Apr16\Test1\Tortuosity12.csv"
 tortuosity23file = "I:\Apr16\Test1\Tortuosity23.csv"
 tortuosity13file = "I:\Apr16\Test1\Tortuosity13.csv"
@@ -106,7 +107,7 @@ CN13file = "I:\Apr16\Test1\CoordinationNumbers13.csv"
 
 ppt_start_time = "15:18:45"
 
-cleanuptimes = [[0,18],[18,57],[57,100],[100,143],[143,185]]
+cleanuptimes = [[0,18],[18,57],[57,100],[100,143],[143,185]]'''
 
 
 #Apr16 Test 2
@@ -219,7 +220,7 @@ flowrateraw = np.array(flowrate)
 
 
 #adjusting PPT data to get the change in pressure rather than considering total pressure as Darcy's law ignores the head difference ( so for static h = 0 at both)
-noflowtimes = [0,18]
+noflowtimes = [0,13]
 plotendtime = times[-1] - 10
 
 
@@ -231,6 +232,9 @@ endindex = min(range(len(timelist)), key=lambda i: abs(timelist[i] - noflowtimes
 PPT1base = np.average(PPT1[startindex:endindex])
 PPT2base = np.average(PPT2[startindex:endindex])
 PPT3base = np.average(PPT3[startindex:endindex])
+
+print(PPT1base,PPT2base,PPT3base)
+
 
 PPT1adjusted = (PPT1 - PPT1base) * 1000
 PPT2adjusted = (PPT2 - PPT2base) * 1000
@@ -246,9 +250,9 @@ PPT3adjusted = plottingfunctions.replacewithconstants(PPT3adjusted,timelist,clea
 fig, ((ax1,ax2),(ax3,ax4),(ax5,ax6)) = plt.subplots(3, 2, figsize=(10, 8))
 
 
-ax1.plot(times,PPT1adjusted, label = 'PPT1 offset')
-ax1.plot(times,PPT2adjusted, label = 'PPT2 offset')
-ax1.plot(times,PPT3adjusted, label = 'PPT3 offset')
+ax1.plot(times,PPT1, label = 'PPT1 offset')
+ax1.plot(times,PPT2, label = 'PPT2 offset')
+ax1.plot(times,PPT3, label = 'PPT3 offset')
 ax1.set_xlabel('Time')
 ax1.set_ylabel('Pressure (Pa)')
 ax1.legend()

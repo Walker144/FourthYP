@@ -48,7 +48,7 @@ plt.show()
 
 
 
-'''fig, (ax2) = plt.subplots(1,1)
+fig, (ax2) = plt.subplots(1,1)
 fig.suptitle("Mar27 Test 1: Dense packed circular particles")
 
 ax2.scatter(por12[::100],datafile["Tortuosity12"][::100] ,color = 'tab:blue',label = "PPT1 - PPT2")
@@ -73,4 +73,3 @@ ax2.legend()
 #ax1.set_box_aspect(1)
 ax2.set_box_aspect(1)
 plt.show()
-'''

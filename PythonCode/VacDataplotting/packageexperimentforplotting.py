@@ -90,9 +90,9 @@ def package_experimentset_to_csv(folder,cutoff,DataOutRate,matstarttime):
     outputdf.insert(len(outputdf.columns),"Tortuosity12",Torttodf)
  
     
-    filenames = ['Tortuosity23.csv','Tortuosity13.csv','VoidRatio12.csv','VoidRatio23.csv','VoidRatio13.csv','CoordinationNumbers12.csv','CoordinationNumbers23.csv','CoordinationNumbers13.csv']
-    datatocollate  = [["Tortuosity"],["Tortuosity"],["VoidRatio"],["VoidRatio"],["VoidRatio"],["CoordinationNumber","MechanicalCoordination"],["CoordinationNumber","MechanicalCoordination"],["CoordinationNumber","MechanicalCoordination"]]
-    headernames = [["Tortuosity23"],["Tortuosity13"],["VoidRatio12"],["VoidRatio23"],["VoidRatio13"],["CoordinationNumber12","MechanicalCoordination12"],["CoordinationNumber23","MechanicalCoordination23"],["CoordinationNumber13","MechanicalCoordination13"]]
+    filenames = ['Tortuosity23.csv','Tortuosity13.csv','VoidRatio12.csv','VoidRatio23.csv','VoidRatio13.csv','CoordinationNumbers12.csv','CoordinationNumbers23.csv','CoordinationNumbers13.csv',"CloseParticledistances.csv"]
+    datatocollate  = [["Tortuosity"],["Tortuosity"],["VoidRatio"],["VoidRatio"],["VoidRatio"],["CoordinationNumber","MechanicalCoordination"],["CoordinationNumber","MechanicalCoordination"],["CoordinationNumber","MechanicalCoordination"],["CoordinationNumber12","CoordinationNumber23","CoordinationNumber13"]]
+    headernames = [["Tortuosity23"],["Tortuosity13"],["VoidRatio12"],["VoidRatio23"],["VoidRatio13"],["CoordinationNumber12","MechanicalCoordination12"],["CoordinationNumber23","MechanicalCoordination23"],["CoordinationNumber13","MechanicalCoordination13"],["CloseParticles12","CloseParticles23","CloseParticles13"]]
 
     j = 0
     for filename in filenames:
@@ -129,4 +129,4 @@ def package_experimentset_to_csv(folder,cutoff,DataOutRate,matstarttime):
 
 
 if __name__ == "__main__":
-    package_experimentset_to_csv("I:\Mar27\Test1",2,100,"11:28:41")
+    package_experimentset_to_csv("I:\Apr16\Test1",2,100,"15:18:45")
